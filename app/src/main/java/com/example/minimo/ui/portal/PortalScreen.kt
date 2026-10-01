@@ -66,7 +66,8 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
 
     var currentUrl by remember { mutableStateOf<String?>(null) }
     var progress by remember { mutableIntStateOf(0) }
-    var loadFailed by remember { mutableStateOf(false) }
+    // Technical reason of the last failed load, or null when the page loaded.
+    var loadError by remember { mutableStateOf<String?>(null) }
     // The page text waiting for the user to pick where to save it. Kept only in memory, never persisted.
     var pendingHtml by remember { mutableStateOf<String?>(null) }
 
@@ -80,8 +81,9 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
         createPortalWebView(
             context,
             object : PortalWebListener {
-                override fun onPageStarted() {
-                    loadFailed = false
+                override fun onPageStarted(url: String?) {
+                    // After an error the WebView starts its own error page; keep our message for that one.
+                    if (PortalUrls.isAllowed(url)) loadError = null
                 }
 
                 override fun onPageFinished(url: String?) {
@@ -93,8 +95,8 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
                     progress = percent
                 }
 
-                override fun onLoadError() {
-                    loadFailed = true
+                override fun onLoadError(detail: String) {
+                    loadError = detail
                 }
 
                 override fun onLinkBlocked() {
@@ -203,7 +205,7 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
             }
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 AndroidView(factory = { webView }, modifier = Modifier.fillMaxSize())
-                if (loadFailed) {
+                loadError?.let { detail ->
                     Surface(Modifier.fillMaxSize()) {
                         Column(
                             modifier = Modifier.fillMaxSize().padding(24.dp),
@@ -215,10 +217,17 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
                             )
+                            Text(
+                                stringResource(R.string.portal_load_error_detail, detail),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(top = 8.dp),
+                            )
                             Button(
                                 onClick = {
-                                    loadFailed = false
-                                    webView.reload()
+                                    loadError = null
+                                    webView.loadUrl(PortalUrls.LOGIN_URL)
                                 },
                                 modifier = Modifier.padding(top = 16.dp),
                             ) { Text(stringResource(R.string.portal_retry)) }
