@@ -10,7 +10,6 @@
     <string name="action_delete">Eliminar</string>
     <string name="action_back">Volver</string>
     <string name="action_edit">Editar</string>
-    <string name="loading">Cargando…</string>
     <string name="storage_read_error">No se pudieron leer los datos guardados. Tus datos no se modificaron.</string>
     <string name="storage_save_error">No se pudieron guardar los cambios.</string>
 
