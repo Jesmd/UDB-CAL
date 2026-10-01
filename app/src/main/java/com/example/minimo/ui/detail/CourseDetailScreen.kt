@@ -243,6 +243,7 @@ private fun SummaryBlock(content: CourseDetailUiState.Content) {
                     stringResource(
                         R.string.detail_summary,
                         analysis.accumulated.toPlainString(),
+                        analysis.accumulatedOnPortal.toPlainString(),
                         analysis.pendingWeight.asPercent(),
                     ),
                     style = MaterialTheme.typography.titleMedium,
@@ -484,7 +485,11 @@ private fun SimulatorBlock(
                 val projection = simulation.projection
                 val passMark = content.settings.passMark.asThreshold()
                 Text(
-                    stringResource(R.string.simulator_final, projection.finalGrade.toPlainString()),
+                    stringResource(
+                        R.string.simulator_final,
+                        projection.finalGrade.toPlainString(),
+                        projection.finalGradeOnPortal.toPlainString(),
+                    ),
                     style = MaterialTheme.typography.titleSmall,
                 )
                 Text(

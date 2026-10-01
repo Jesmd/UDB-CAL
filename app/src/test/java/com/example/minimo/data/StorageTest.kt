@@ -13,7 +13,7 @@ import org.junit.Test
 
 class StorageTest {
     private val sample = AppData(
-        settings = GradeSettings(passMark = BigDecimal("6.0"), defaultGoal = BigDecimal("7.5")),
+        settings = GradeSettings(passMark = BigDecimal("6.0"), defaultGoal = BigDecimal("7.5"), roundLikePortal = true),
         courses = listOf(
             Course(
                 id = "c1",

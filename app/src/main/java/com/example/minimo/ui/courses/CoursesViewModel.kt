@@ -71,6 +71,7 @@ class CoursesViewModel(private val repository: CourseRepository) : ViewModel() {
                         evaluations = course.evaluations,
                         passMark = settings.passMark,
                         goal = settings.effectiveGoal(course.goal),
+                        roundLikePortal = settings.roundLikePortal,
                     ),
                 )
             },

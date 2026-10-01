@@ -19,6 +19,7 @@ internal data class AppDataDto(
     val schemaVersion: Int = 1,
     val passMark: String = "6.0",
     val defaultGoal: String = "6.0",
+    val roundLikePortal: Boolean = false,
     val courses: List<CourseDto> = emptyList(),
     val diagnosticMode: Boolean = false,
     val zeroConfirmations: List<String> = emptyList(),
@@ -60,6 +61,7 @@ internal object AppDataCodec {
     private fun AppData.toDto() = AppDataDto(
         passMark = settings.passMark.toPlainString(),
         defaultGoal = settings.defaultGoal.toPlainString(),
+        roundLikePortal = settings.roundLikePortal,
         courses = courses.map { it.toDto() },
         diagnosticMode = diagnosticMode,
         zeroConfirmations = zeroConfirmations.sorted(),
@@ -84,7 +86,7 @@ internal object AppDataCodec {
     )
 
     private fun AppDataDto.toDomain() = AppData(
-        settings = GradeSettings(BigDecimal(passMark), BigDecimal(defaultGoal)),
+        settings = GradeSettings(BigDecimal(passMark), BigDecimal(defaultGoal), roundLikePortal),
         courses = courses.map { it.toDomain() },
         diagnosticMode = diagnosticMode,
         zeroConfirmations = zeroConfirmations.toSet(),

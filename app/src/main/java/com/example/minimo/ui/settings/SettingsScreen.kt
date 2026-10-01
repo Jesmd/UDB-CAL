@@ -189,8 +189,23 @@ private fun GradeSettingsForm(
         )
         Button(
             enabled = changed,
-            onClick = { onSave(GradeSettings(checkNotNull(passMark), checkNotNull(goal))) },
+            onClick = { onSave(settings.copy(passMark = checkNotNull(passMark), defaultGoal = checkNotNull(goal))) },
         ) { Text(stringResource(R.string.action_save)) }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.settings_round_title), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    stringResource(R.string.settings_round_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Switch(
+                checked = settings.roundLikePortal,
+                onCheckedChange = { onSave(settings.copy(roundLikePortal = it)) },
+                modifier = Modifier.padding(start = 8.dp),
+            )
+        }
     }
 }
 
