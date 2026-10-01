@@ -15,10 +15,11 @@ import com.example.minimo.data.portal.PortalUrls
 
 /** Events the in-app browser reports to its screen. */
 internal interface PortalWebListener {
-    fun onPageStarted()
+    fun onPageStarted(url: String?)
     fun onPageFinished(url: String?)
     fun onProgress(percent: Int)
-    fun onLoadError()
+    /** @param detail short technical reason (e.g. "net::ERR_NAME_NOT_RESOLVED"), never a URL. */
+    fun onLoadError(detail: String)
     fun onLinkBlocked()
 }
 
@@ -54,7 +55,7 @@ internal fun createPortalWebView(context: Context, listener: PortalWebListener):
             }
 
             override fun onPageStarted(view: WebView, url: String?, favicon: android.graphics.Bitmap?) {
-                listener.onPageStarted()
+                listener.onPageStarted(url)
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
@@ -67,16 +68,16 @@ internal fun createPortalWebView(context: Context, listener: PortalWebListener):
             }
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
-                if (request.isForMainFrame) listener.onLoadError()
+                if (request.isForMainFrame) listener.onLoadError(error.description.toString())
             }
 
             override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
                 handler.cancel()
-                listener.onLoadError()
+                listener.onLoadError("SSL: ${sslReason(error.primaryError)}")
             }
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                listener.onLoadError()
+                listener.onLoadError("RENDER_PROCESS_GONE")
                 return true
             }
         }
@@ -87,3 +88,12 @@ internal fun createPortalWebView(context: Context, listener: PortalWebListener):
             }
         }
     }
+
+private fun sslReason(primaryError: Int): String = when (primaryError) {
+    SslError.SSL_NOTYETVALID -> "CERT_NOT_YET_VALID"
+    SslError.SSL_EXPIRED -> "CERT_EXPIRED"
+    SslError.SSL_IDMISMATCH -> "CERT_HOST_MISMATCH"
+    SslError.SSL_UNTRUSTED -> "CERT_UNTRUSTED"
+    SslError.SSL_DATE_INVALID -> "CERT_DATE_INVALID"
+    else -> "CERT_INVALID"
+}

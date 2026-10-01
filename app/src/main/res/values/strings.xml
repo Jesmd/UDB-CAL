@@ -105,6 +105,7 @@
     <string name="portal_reload">Recargar</string>
     <string name="portal_link_blocked">Enlace bloqueado: solo se permite el portal de la universidad.</string>
     <string name="portal_load_error">No se pudo cargar la página. Revisa tu conexión.</string>
+    <string name="portal_load_error_detail">Detalle técnico: %1$s</string>
     <string name="portal_retry">Reintentar</string>
     <string name="portal_expired_banner">La sesión expiró. Inicia sesión de nuevo.</string>
     <string name="portal_diag_page">Página: %1$s</string>
