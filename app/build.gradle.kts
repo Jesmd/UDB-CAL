@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.jsoup)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)

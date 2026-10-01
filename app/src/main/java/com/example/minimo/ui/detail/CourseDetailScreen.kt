@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +86,8 @@ fun CourseDetailScreen(
                     }
                 },
                 actions = {
-                    if (content != null) {
+                    // Portal courses are replaced on each sync, so they are not edited or deleted by hand.
+                    if (content != null && !content.fromPortal) {
                         IconButton(onClick = { showCourseEditor = true }) {
                             Icon(Icons.Filled.Edit, stringResource(R.string.action_edit))
                         }
@@ -183,8 +186,11 @@ private fun DetailContent(
         item {
             EvaluationsBlock(
                 evaluations = content.course.evaluations,
+                fromPortal = content.fromPortal,
+                portalZeros = content.portalZeros,
                 onAdd = { onEditEvaluation(NEW_EVALUATION) },
                 onEdit = { onEditEvaluation(it.id) },
+                onRealZeroChange = viewModel::setRealZero,
             )
         }
         if (content.analysis is CourseAnalysis.Computed) {
@@ -219,7 +225,11 @@ private fun DetailContent(
 private fun SummaryBlock(content: CourseDetailUiState.Content) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(content.course.name, style = MaterialTheme.typography.headlineSmall)
-        content.course.code?.let {
+        val origin = when {
+            content.fromPortal -> stringResource(R.string.detail_portal_source, content.course.code.orEmpty())
+            else -> content.course.code
+        }
+        origin?.let {
             Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         when (val analysis = content.analysis) {
@@ -248,22 +258,35 @@ private fun SummaryBlock(content: CourseDetailUiState.Content) {
 @Composable
 private fun EvaluationsBlock(
     evaluations: List<Evaluation>,
+    fromPortal: Boolean,
+    portalZeros: Map<String, Boolean>,
     onAdd: () -> Unit,
     onEdit: (Evaluation) -> Unit,
+    onRealZeroChange: (String, Boolean) -> Unit,
 ) {
     OutlinedCard(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(vertical = 8.dp)) {
             Row(
-                Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp),
+                Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp).heightIn(min = 48.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(stringResource(R.string.evaluations_title), style = MaterialTheme.typography.titleMedium)
-                TextButton(onClick = onAdd) { Text(stringResource(R.string.evaluations_add)) }
+                if (!fromPortal) {
+                    TextButton(onClick = onAdd) { Text(stringResource(R.string.evaluations_add)) }
+                }
+            }
+            if (fromPortal) {
+                Text(
+                    stringResource(R.string.detail_portal_read_only),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
             }
             if (evaluations.isEmpty()) {
                 Text(
-                    stringResource(R.string.evaluations_empty),
+                    stringResource(if (fromPortal) R.string.courses_portal_no_activities else R.string.evaluations_empty),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 )
@@ -275,17 +298,36 @@ private fun EvaluationsBlock(
                 }
                 evaluations.forEach { evaluation ->
                     HorizontalDivider()
+                    val rowModifier = if (fromPortal) Modifier else Modifier.clickable { onEdit(evaluation) }
                     Row(
-                        Modifier.fillMaxWidth().clickable { onEdit(evaluation) }.padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                        rowModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            evaluation.name,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f),
-                        )
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                evaluation.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 4,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            portalZeros[evaluation.id]?.let { isRealZero ->
+                                Text(
+                                    stringResource(R.string.evaluation_portal_zero_hint),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                TextButton(
+                                    onClick = { onRealZeroChange(evaluation.id, !isRealZero) },
+                                    contentPadding = PaddingValues(horizontal = 0.dp),
+                                ) {
+                                    Text(
+                                        stringResource(
+                                            if (isRealZero) R.string.evaluation_back_to_pending else R.string.evaluation_real_zero,
+                                        ),
+                                    )
+                                }
+                            }
+                        }
                         Text(
                             evaluation.weight.asPercent(),
                             style = MaterialTheme.typography.bodyMedium,

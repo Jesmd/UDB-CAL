@@ -10,17 +10,34 @@ import org.junit.Test
 class StringsResourceTest {
     private fun strings(): Map<String, String> {
         val file = File("src/main/res/values/strings.xml")
-        val nodes = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file).getElementsByTagName("string")
-        return (0 until nodes.length).associate { nodes.item(it).attributes.getNamedItem("name").nodeValue to nodes.item(it).textContent }
+        val document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file)
+        val strings = document.getElementsByTagName("string").let { nodes ->
+            (0 until nodes.length).associate { nodes.item(it).attributes.getNamedItem("name").nodeValue to nodes.item(it).textContent }
+        }
+        // Plural items are named after their plural and quantity, e.g. "sync_done/one".
+        val plurals = document.getElementsByTagName("item").let { nodes ->
+            (0 until nodes.length).associate {
+                val item = nodes.item(it)
+                val plural = item.parentNode.attributes.getNamedItem("name").nodeValue
+                "$plural/${item.attributes.getNamedItem("quantity").nodeValue}" to item.textContent
+            }
+        }
+        return strings + plurals
     }
 
     @Test
     fun everyStringThatTakesArgumentsFormatsWithoutCrashing() {
-        val arguments = Array<Any>(5) { "x" }
         val broken = strings().filter { (_, text) -> text.contains(Regex("%\\d\\$")) }.filter { (_, text) ->
-            runCatching { String.format(Locale.ROOT, text, *arguments) }.isFailure
+            runCatching { String.format(Locale.ROOT, text, *argumentsFor(text)) }.isFailure
         }
         assertTrue("Strings with invalid format: ${broken.keys}", broken.isEmpty())
+    }
+
+    /** One argument per `%n$` specifier, of the type the specifier expects (as the app passes them). */
+    private fun argumentsFor(text: String): Array<Any> {
+        val types = Regex("%(\\d)\\$([a-zA-Z])").findAll(text).associate { it.groupValues[1].toInt() to it.groupValues[2] }
+        val count = types.keys.maxOrNull() ?: 0
+        return Array(count) { index -> if (types[index + 1] == "d") 1 else "x" }
     }
 
     @Test
