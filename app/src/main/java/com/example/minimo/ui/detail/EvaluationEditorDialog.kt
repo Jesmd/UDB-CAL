@@ -1,18 +1,12 @@
 package com.example.minimo.ui.detail
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -30,6 +25,11 @@ import com.example.minimo.domain.Evaluation
 import com.example.minimo.domain.EvaluationStatus
 import com.example.minimo.domain.Validation
 import com.example.minimo.ui.asNumber
+import com.example.minimo.ui.glass.GlassButton
+import com.example.minimo.ui.glass.GlassButtonStyle
+import com.example.minimo.ui.glass.GlassDialog
+import com.example.minimo.ui.glass.GlassSwitch
+import com.example.minimo.ui.glass.GlassTextField
 import java.math.BigDecimal
 
 /** Creates an evaluation (when [initial] is null) or edits one. Invalid values are rejected here. */
@@ -55,73 +55,70 @@ fun EvaluationEditorDialog(
     val weightError = weightText.isNotEmpty() && weight == null
     val gradeError = gradeText.isNotEmpty() && grade == null
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(stringResource(if (initial == null) R.string.evaluation_new_title else R.string.evaluation_edit_title))
-        },
-        text = {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.evaluation_name_label)) },
-                    isError = nameError,
-                    supportingText = if (!nameError) null else {
-                        { Text(stringResource(R.string.evaluation_name_required)) }
-                    },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                OutlinedTextField(
-                    value = weightText,
-                    onValueChange = { weightText = it },
-                    label = { Text(stringResource(R.string.evaluation_weight_label)) },
-                    isError = weightError,
-                    supportingText = if (!weightError) null else {
-                        { Text(stringResource(R.string.evaluation_weight_invalid)) }
-                    },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                ) {
-                    Text(stringResource(R.string.evaluation_graded_label), Modifier.weight(1f))
-                    Switch(checked = graded, onCheckedChange = { graded = it })
-                }
-                if (graded) {
-                    OutlinedTextField(
-                        value = gradeText,
-                        onValueChange = { gradeText = it },
-                        label = { Text(stringResource(R.string.evaluation_grade_label)) },
-                        isError = gradeError,
-                        supportingText = if (!gradeError) null else {
-                            { Text(stringResource(R.string.evaluation_grade_invalid)) }
-                        },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    )
-                }
-                if (onDelete != null) {
-                    TextButton(onClick = onDelete, modifier = Modifier.padding(top = 8.dp)) {
-                        Text(stringResource(R.string.action_delete))
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                enabled = canSave,
+    GlassDialog(
+        title = stringResource(if (initial == null) R.string.evaluation_new_title else R.string.evaluation_edit_title),
+        onDismiss = onDismiss,
+        buttons = {
+            GlassButton(
+                stringResource(R.string.action_cancel),
+                onClick = onDismiss,
+                style = GlassButtonStyle.Regular,
+                modifier = Modifier.weight(1f),
+            )
+            GlassButton(
+                stringResource(R.string.action_save),
                 onClick = { onSave(name, checkNotNull(weight), if (graded) grade else null) },
-            ) { Text(stringResource(R.string.action_save)) }
+                enabled = canSave,
+                modifier = Modifier.weight(1f),
+            )
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
-        },
-    )
+    ) {
+        GlassTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = stringResource(R.string.evaluation_name_label),
+            isError = nameError,
+            supportingText = if (nameError) stringResource(R.string.evaluation_name_required) else null,
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        GlassTextField(
+            value = weightText,
+            onValueChange = { weightText = it },
+            label = stringResource(R.string.evaluation_weight_label),
+            isError = weightError,
+            supportingText = if (weightError) stringResource(R.string.evaluation_weight_invalid) else null,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp).semantics(mergeDescendants = true) {},
+        ) {
+            Text(stringResource(R.string.evaluation_graded_label), Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+            GlassSwitch(checked = graded, onCheckedChange = { graded = it })
+        }
+        if (graded) {
+            GlassTextField(
+                value = gradeText,
+                onValueChange = { gradeText = it },
+                label = stringResource(R.string.evaluation_grade_label),
+                isError = gradeError,
+                supportingText = if (gradeError) stringResource(R.string.evaluation_grade_invalid) else null,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        if (onDelete != null) {
+            GlassButton(
+                stringResource(R.string.action_delete),
+                onClick = onDelete,
+                style = GlassButtonStyle.Danger,
+                compact = true,
+            )
+        }
+    }
 }

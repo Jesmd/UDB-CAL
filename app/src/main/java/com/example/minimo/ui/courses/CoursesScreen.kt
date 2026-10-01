@@ -1,48 +1,63 @@
 package com.example.minimo.ui.courses
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
 import com.example.minimo.R
 import com.example.minimo.data.SyncInfo
 import com.example.minimo.domain.CourseAnalysis
 import com.example.minimo.ui.LoadingBox
 import com.example.minimo.ui.MessageBox
 import com.example.minimo.ui.asPercent
+import com.example.minimo.ui.glass.GlassButton
+import com.example.minimo.ui.glass.GlassButtonStyle
+import com.example.minimo.ui.glass.GlassCard
+import com.example.minimo.ui.glass.GlassChip
+import com.example.minimo.ui.glass.GlassIconButton
+import com.example.minimo.ui.glass.GlassScaffold
+import com.example.minimo.ui.glass.GlassTopBar
+import com.example.minimo.ui.glass.GradeBar
+import com.example.minimo.ui.glass.LargeTitle
+import com.example.minimo.ui.glass.LocalGlassBackdrop
+import com.example.minimo.ui.glass.glassSurface
+import com.example.minimo.ui.glass.topBarProgress
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoursesScreen(
     viewModel: CoursesViewModel,
@@ -51,54 +66,65 @@ fun CoursesScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showEditor by rememberSaveable { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    // Like adding, syncing is only offered once the stored data could be read, so nothing is overwritten.
+    val ready = state is CoursesUiState.Empty || state is CoursesUiState.Content
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    GlassScaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.courses_title)) },
+            GlassTopBar(
+                title = stringResource(R.string.courses_title),
+                progress = listState.topBarProgress(),
                 actions = {
-                    // Like adding, syncing is only offered once the stored data could be read.
-                    if (state is CoursesUiState.Empty || state is CoursesUiState.Content) {
-                        TextButton(onClick = onSync) {
-                            Icon(Icons.Filled.Refresh, contentDescription = null)
-                            Text(stringResource(R.string.sync_action), Modifier.padding(start = 4.dp))
-                        }
+                    if (ready) {
+                        GlassButton(
+                            text = stringResource(R.string.sync_action),
+                            onClick = onSync,
+                            style = GlassButtonStyle.Regular,
+                            icon = Icons.Filled.Refresh,
+                            backdrop = LocalGlassBackdrop.current,
+                            compact = true,
+                        )
+                        GlassIconButton(
+                            icon = Icons.Filled.Add,
+                            contentDescription = stringResource(R.string.courses_add),
+                            onClick = { showEditor = true },
+                        )
                     }
                 },
             )
         },
-        floatingActionButton = {
-            // Adding is only offered once the stored data could be read, so nothing is overwritten.
-            if (state is CoursesUiState.Empty || state is CoursesUiState.Content) {
-                FloatingActionButton(onClick = { showEditor = true }) {
-                    Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.courses_add))
-                }
-            }
-        },
     ) { padding ->
-        val modifier = Modifier.padding(padding)
         when (val current = state) {
-            CoursesUiState.Loading -> LoadingBox(modifier)
-            is CoursesUiState.Empty -> Column(modifier) {
-                current.lastSync?.let { LastSyncLine(it, Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) }
-                MessageBox(
-                    title = stringResource(R.string.courses_empty_title),
-                    hint = stringResource(R.string.courses_empty_hint_sync),
-                )
+            CoursesUiState.Loading -> Column(Modifier.padding(top = padding.calculateTopPadding())) {
+                LargeTitle(stringResource(R.string.courses_title), Modifier.padding(horizontal = 16.dp))
+                LoadingBox()
             }
-            CoursesUiState.Error -> MessageBox(
-                title = stringResource(R.string.storage_read_error),
-                modifier = modifier,
+            is CoursesUiState.Empty -> EmptyState(
+                lastSync = current.lastSync,
+                padding = padding,
+                onSync = onSync,
+                onAdd = { showEditor = true },
             )
+            CoursesUiState.Error -> Column(Modifier.padding(top = padding.calculateTopPadding())) {
+                LargeTitle(stringResource(R.string.courses_title), Modifier.padding(horizontal = 16.dp))
+                MessageBox(stringResource(R.string.storage_read_error))
+            }
             is CoursesUiState.Content -> LazyColumn(
-                modifier = modifier,
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding() + 8.dp,
+                ),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                current.lastSync?.let { item { LastSyncLine(it) } }
+                item(key = "title") { LargeTitle(stringResource(R.string.courses_title)) }
+                current.lastSync?.let { sync -> item(key = "sync") { LastSyncLine(sync, Modifier.padding(horizontal = 4.dp)) } }
                 items(current.courses, key = { it.id }) { course ->
-                    CourseCard(course, onClick = { onOpenCourse(course.id) })
+                    CourseCard(course, onClick = { onOpenCourse(course.id) }, modifier = Modifier.animateItem())
                 }
             }
         }
@@ -119,24 +145,78 @@ fun CoursesScreen(
 }
 
 @Composable
-private fun CourseCard(course: CourseSummary, onClick: () -> Unit) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)) {
-        Column(Modifier.padding(16.dp)) {
+private fun EmptyState(lastSync: SyncInfo?, padding: PaddingValues, onSync: () -> Unit, onAdd: () -> Unit) {
+    Column(
+        Modifier.fillMaxSize().padding(top = padding.calculateTopPadding(), bottom = padding.calculateBottomPadding()),
+    ) {
+        LargeTitle(stringResource(R.string.courses_title), Modifier.padding(horizontal = 16.dp))
+        lastSync?.let { LastSyncLine(it, Modifier.padding(horizontal = 20.dp, vertical = 4.dp)) }
+        Column(
+            Modifier.weight(1f).fillMaxWidth().padding(horizontal = 28.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                Modifier
+                    .size(96.dp)
+                    .glassSurface(CircleShape, backdrop = null, shadowElevation = 14.dp)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.List,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(42.dp),
+                )
+            }
             Text(
-                text = course.name,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
+                stringResource(R.string.courses_empty_title),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 22.dp),
             )
-            val origin = listOfNotNull(
-                course.code,
-                if (course.fromPortal) stringResource(R.string.courses_from_portal) else null,
-            ).joinToString(" · ")
-            if (origin.isNotEmpty()) {
-                Text(
-                    text = origin,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Text(
+                stringResource(R.string.courses_empty_hint),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                GlassButton(stringResource(R.string.sync_action), onSync, icon = Icons.Filled.Refresh)
+                GlassButton(stringResource(R.string.courses_add), onAdd, style = GlassButtonStyle.Regular, icon = Icons.Filled.Add)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CourseCard(course: CourseSummary, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    GlassCard(modifier.fillMaxWidth(), onClick = onClick) {
+        Column(Modifier.padding(horizontal = 20.dp, vertical = 18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        text = course.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (course.code != null || course.fromPortal) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            course.code?.let {
+                                Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            if (course.fromPortal) GlassChip(stringResource(R.string.courses_from_portal))
+                        }
+                    }
+                }
+                Icon(
+                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(start = 8.dp),
                 )
             }
             when (val analysis = course.analysis) {
@@ -145,25 +225,49 @@ private fun CourseCard(course: CourseSummary, onClick: () -> Unit) {
                         if (course.fromPortal) R.string.courses_portal_no_activities else R.string.courses_no_evaluations,
                     ),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 is CourseAnalysis.Computed -> {
-                    Text(
-                        text = stringResource(
-                            R.string.courses_summary,
-                            analysis.accumulated.toPlainString(),
-                            analysis.accumulatedOnPortal.toPlainString(),
-                            analysis.pendingWeight.asPercent(),
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 8.dp),
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Column(Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(
+                                    analysis.accumulated.toPlainString(),
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Text(
+                                    stringResource(R.string.stat_out_of),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
+                                )
+                            }
+                            Text(
+                                stringResource(R.string.stat_accumulated),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            GlassChip(stringResource(R.string.course_pending_chip, analysis.pendingWeight.asPercent()))
+                            Text(
+                                stringResource(R.string.course_on_portal, analysis.accumulatedOnPortal.toPlainString()),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                    GradeBar(
+                        earned = analysis.accumulated.toFloat(),
+                        possible = analysis.maxPossible.toFloat(),
+                        passMark = course.passMark.toFloat(),
                     )
                     if (!analysis.weightsSumTo100) {
                         Text(
                             text = stringResource(R.string.weights_sum_short, analysis.totalWeight.asPercent()),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(top = 4.dp),
                         )
                     }
                 }

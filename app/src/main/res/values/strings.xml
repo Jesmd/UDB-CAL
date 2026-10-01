@@ -18,7 +18,12 @@
     <string name="courses_empty_title">Aún no hay materias</string>
     <string name="courses_add">Agregar materia</string>
     <string name="courses_no_evaluations">Sin evaluaciones</string>
-    <string name="courses_summary">Acumulado: %1$s / 10 (en el portal: %2$s) · Pendiente: %3$s</string>
+    <string name="course_pending_chip">Pendiente %1$s</string>
+    <string name="course_on_portal">Portal: %1$s</string>
+    <string name="stat_accumulated">Acumulado</string>
+    <string name="stat_pending">Pendiente</string>
+    <string name="stat_portal">En el portal</string>
+    <string name="stat_out_of">/ 10</string>
 
     <!-- Course editor -->
     <string name="course_new_title">Nueva materia</string>
@@ -31,7 +36,6 @@
 
     <!-- Course detail -->
     <string name="detail_not_found">Esta materia ya no existe.</string>
-    <string name="detail_summary">Acumulado: %1$s / 10 (en el portal: %2$s) · Pendiente: %3$s</string>
     <string name="weights_sum_short">Los porcentajes suman %1$s</string>
     <string name="detail_weights_warning">Los porcentajes suman %1$s, no 100%%. El cálculo usa los porcentajes tal como están.</string>
     <string name="evaluations_title">Evaluaciones</string>
@@ -48,7 +52,6 @@
     <string name="calculate_minimum">Calcular mínimo</string>
     <string name="target_pass_label">Para aprobar (%1$s)</string>
     <string name="target_goal_label">Para tu meta (%1$s)</string>
-    <string name="target_line">%1$s: %2$s</string>
     <string name="outcome_secured">ya está asegurada</string>
     <string name="outcome_reachable">necesitas %1$s / 10 en lo que falta</string>
     <string name="outcome_impossible">imposible: necesitarías %1$s / 10</string>
@@ -81,6 +84,7 @@
 
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>
+    <string name="settings_grades_section">Calificaciones</string>
     <string name="settings_pass_mark_label">Nota mínima para aprobar</string>
     <string name="settings_pass_mark_invalid">Escribe un valor mayor que 0 y hasta 10, con un decimal como máximo.</string>
     <string name="settings_default_goal_label">Meta por defecto</string>
@@ -143,7 +147,7 @@
     <string name="courses_last_sync_no_cycle">Sincronizado: %1$s</string>
     <string name="courses_from_portal">Del portal</string>
     <string name="courses_portal_no_activities">El portal aún no muestra actividades</string>
-    <string name="courses_empty_hint_sync">Agrega una materia con el botón + o pulsa Sincronizar para traerlas del portal.</string>
+    <string name="courses_empty_hint">Sincroniza tus materias desde el portal o agrégalas a mano.</string>
 
     <!-- Portal courses in detail -->
     <string name="detail_portal_source">Del portal · %1$s</string>

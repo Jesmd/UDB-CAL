@@ -4,28 +4,22 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,9 +28,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -51,18 +45,31 @@ import com.example.minimo.ui.LoadingBox
 import com.example.minimo.ui.MessageBox
 import com.example.minimo.ui.asPercent
 import com.example.minimo.ui.asThreshold
+import com.example.minimo.ui.glass.GlassButton
+import com.example.minimo.ui.glass.GlassButtonStyle
+import com.example.minimo.ui.glass.GlassCard
+import com.example.minimo.ui.glass.GlassDialog
+import com.example.minimo.ui.glass.GlassDivider
+import com.example.minimo.ui.glass.GlassScaffold
+import com.example.minimo.ui.glass.GlassSwitch
+import com.example.minimo.ui.glass.GlassTextField
+import com.example.minimo.ui.glass.GlassTopBar
+import com.example.minimo.ui.glass.LargeTitle
+import com.example.minimo.ui.glass.SectionHeader
+import com.example.minimo.ui.glass.topBarProgress
+import com.example.minimo.ui.theme.glass
 import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel, onOpenPortal: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val parserCheck by viewModel.parserCheck.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
     val openPage = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             scope.launch {
@@ -72,17 +79,36 @@ fun SettingsScreen(viewModel: SettingsViewModel, onOpenPortal: () -> Unit) {
         }
     }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.settings_title)) }) },
+    GlassScaffold(
+        topBar = { GlassTopBar(title = stringResource(R.string.settings_title), progress = scrollState.topBarProgress()) },
     ) { padding ->
-        val modifier = Modifier.padding(padding)
         when (val current = state) {
-            SettingsUiState.Loading -> LoadingBox(modifier)
-            SettingsUiState.Error -> MessageBox(stringResource(R.string.storage_read_error), modifier)
-            is SettingsUiState.Content -> Column(modifier.imePadding().verticalScroll(rememberScrollState())) {
+            SettingsUiState.Loading -> Column(Modifier.padding(top = padding.calculateTopPadding())) {
+                LargeTitle(stringResource(R.string.settings_title), Modifier.padding(horizontal = 16.dp))
+                LoadingBox()
+            }
+            SettingsUiState.Error -> Column(Modifier.padding(top = padding.calculateTopPadding())) {
+                LargeTitle(stringResource(R.string.settings_title), Modifier.padding(horizontal = 16.dp))
+                MessageBox(stringResource(R.string.storage_read_error))
+            }
+            is SettingsUiState.Content -> Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(
+                        PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = padding.calculateTopPadding(),
+                            bottom = padding.calculateBottomPadding() + 8.dp,
+                        ),
+                    ),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                LargeTitle(stringResource(R.string.settings_title))
+                SectionHeader(stringResource(R.string.settings_grades_section))
                 GradeSettingsForm(current.settings, viewModel::save)
-                HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+                SectionHeader(stringResource(R.string.settings_portal_title))
                 PortalSection(
                     session = current.session,
                     diagnosticMode = current.diagnosticMode,
@@ -130,12 +156,13 @@ private fun ParserCheckDialog(check: ParserCheckUi, onDismiss: () -> Unit) {
             ).joinToString("\n")
         }
     }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.parser_check_title)) },
-        text = { Text(message) },
-        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_close)) } },
-    )
+    GlassDialog(
+        title = stringResource(R.string.parser_check_title),
+        onDismiss = onDismiss,
+        buttons = { GlassButton(stringResource(R.string.action_close), onDismiss, modifier = Modifier.weight(1f)) },
+    ) {
+        Text(message, style = MaterialTheme.typography.bodyMedium)
+    }
 }
 
 @Composable
@@ -151,61 +178,62 @@ private fun GradeSettingsForm(
     val changed = passMark != null && goal != null &&
         (passMark.compareTo(settings.passMark) != 0 || goal.compareTo(settings.defaultGoal) != 0)
 
-    Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        OutlinedTextField(
-            value = passMarkText,
-            onValueChange = { passMarkText = it },
-            label = { Text(stringResource(R.string.settings_pass_mark_label)) },
-            isError = passMark == null,
-            supportingText = if (passMark != null) null else {
-                { Text(stringResource(R.string.settings_pass_mark_invalid)) }
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        OutlinedTextField(
-            value = goalText,
-            onValueChange = { goalText = it },
-            label = { Text(stringResource(R.string.settings_default_goal_label)) },
-            isError = passMark != null && goal == null,
-            supportingText = {
-                Text(
-                    stringResource(
-                        if (passMark != null && goal == null) {
-                            R.string.settings_default_goal_invalid
-                        } else {
-                            R.string.settings_default_goal_hint
-                        },
-                    ),
-                )
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Button(
-            enabled = changed,
-            onClick = { onSave(settings.copy(passMark = checkNotNull(passMark), defaultGoal = checkNotNull(goal))) },
-        ) { Text(stringResource(R.string.action_save)) }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.settings_round_title), style = MaterialTheme.typography.bodyLarge)
-                Text(
-                    stringResource(R.string.settings_round_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            Switch(
+    GlassCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            GlassTextField(
+                value = passMarkText,
+                onValueChange = { passMarkText = it },
+                label = stringResource(R.string.settings_pass_mark_label),
+                isError = passMark == null,
+                supportingText = if (passMark != null) null else stringResource(R.string.settings_pass_mark_invalid),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            GlassTextField(
+                value = goalText,
+                onValueChange = { goalText = it },
+                label = stringResource(R.string.settings_default_goal_label),
+                isError = passMark != null && goal == null,
+                supportingText = stringResource(
+                    if (passMark != null && goal == null) {
+                        R.string.settings_default_goal_invalid
+                    } else {
+                        R.string.settings_default_goal_hint
+                    },
+                ),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                modifier = Modifier.fillMaxWidth(),
+            )
+            GlassButton(
+                text = stringResource(R.string.action_save),
+                enabled = changed,
+                onClick = { onSave(settings.copy(passMark = checkNotNull(passMark), defaultGoal = checkNotNull(goal))) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            GlassDivider()
+            ToggleRow(
+                title = stringResource(R.string.settings_round_title),
+                hint = stringResource(R.string.settings_round_hint),
                 checked = settings.roundLikePortal,
                 onCheckedChange = { onSave(settings.copy(roundLikePortal = it)) },
-                modifier = Modifier.padding(start = 8.dp),
             )
         }
+    }
+}
+
+@Composable
+private fun ToggleRow(title: String, hint: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().semantics(mergeDescendants = true) {},
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(hint, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        GlassSwitch(checked = checked, onCheckedChange = onCheckedChange, modifier = Modifier.padding(start = 12.dp))
     }
 }
 
@@ -218,49 +246,60 @@ private fun PortalSection(
     onDiagnosticChange: (Boolean) -> Unit,
     onCheckSavedPage: () -> Unit,
 ) {
-    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(
-            stringResource(R.string.settings_portal_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.semantics { heading() },
-        )
-        Text(
-            stringResource(R.string.settings_portal_hint),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        val stateText = stringResource(
-            when (session) {
-                SessionState.LoggedOut -> R.string.session_logged_out
-                SessionState.LoggedIn -> R.string.session_logged_in
-                SessionState.Expired -> R.string.session_expired
-            },
-        )
-        Text(stringResource(R.string.settings_portal_state, stateText), style = MaterialTheme.typography.bodyLarge)
-        Button(onClick = onOpenPortal) {
+    GlassCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
-                stringResource(if (session == SessionState.LoggedIn) R.string.portal_open else R.string.portal_open_login),
+                stringResource(R.string.settings_portal_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-        }
-        OutlinedButton(onClick = onLogout) { Text(stringResource(R.string.portal_logout)) }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text(stringResource(R.string.diagnostic_title), style = MaterialTheme.typography.bodyLarge)
+            val stateText = stringResource(
+                when (session) {
+                    SessionState.LoggedOut -> R.string.session_logged_out
+                    SessionState.LoggedIn -> R.string.session_logged_in
+                    SessionState.Expired -> R.string.session_expired
+                },
+            )
+            val dot: Color = when (session) {
+                SessionState.LoggedIn -> MaterialTheme.glass.success
+                SessionState.Expired -> MaterialTheme.glass.warning
+                SessionState.LoggedOut -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Box(Modifier.size(10.dp).background(dot, CircleShape))
+                Text(stringResource(R.string.settings_portal_state, stateText), style = MaterialTheme.typography.bodyLarge)
+            }
+            GlassButton(
+                text = stringResource(if (session == SessionState.LoggedIn) R.string.portal_open else R.string.portal_open_login),
+                onClick = onOpenPortal,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            GlassButton(
+                text = stringResource(R.string.portal_logout),
+                onClick = onLogout,
+                style = GlassButtonStyle.Danger,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            GlassDivider()
+            ToggleRow(
+                title = stringResource(R.string.diagnostic_title),
+                hint = stringResource(R.string.diagnostic_hint),
+                checked = diagnosticMode,
+                onCheckedChange = onDiagnosticChange,
+            )
+            if (diagnosticMode) {
+                GlassButton(
+                    text = stringResource(R.string.parser_check_action),
+                    onClick = onCheckSavedPage,
+                    style = GlassButtonStyle.Regular,
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 Text(
-                    stringResource(R.string.diagnostic_hint),
+                    stringResource(R.string.parser_check_hint),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Switch(checked = diagnosticMode, onCheckedChange = onDiagnosticChange, modifier = Modifier.padding(start = 8.dp))
-        }
-        if (diagnosticMode) {
-            OutlinedButton(onClick = onCheckSavedPage) { Text(stringResource(R.string.parser_check_action)) }
-            Text(
-                stringResource(R.string.parser_check_hint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
         }
     }
 }
