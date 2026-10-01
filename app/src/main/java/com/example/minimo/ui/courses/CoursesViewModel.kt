@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.minimo.AppContainer
 import com.example.minimo.data.AppData
 import com.example.minimo.data.CourseRepository
+import com.example.minimo.data.SyncInfo
 import com.example.minimo.domain.Course
 import com.example.minimo.domain.CourseAnalysis
 import com.example.minimo.domain.CourseSource
@@ -23,13 +24,14 @@ data class CourseSummary(
     val id: String,
     val name: String,
     val code: String?,
+    val fromPortal: Boolean,
     val analysis: CourseAnalysis,
 )
 
 sealed interface CoursesUiState {
     data object Loading : CoursesUiState
-    data object Empty : CoursesUiState
-    data class Content(val courses: List<CourseSummary>) : CoursesUiState
+    data class Empty(val lastSync: SyncInfo?) : CoursesUiState
+    data class Content(val courses: List<CourseSummary>, val lastSync: SyncInfo?) : CoursesUiState
     data object Error : CoursesUiState
 }
 
@@ -56,13 +58,15 @@ class CoursesViewModel(private val repository: CourseRepository) : ViewModel() {
     }
 
     private fun AppData.toUiState(): CoursesUiState {
-        if (courses.isEmpty()) return CoursesUiState.Empty
+        if (courses.isEmpty()) return CoursesUiState.Empty(lastSync)
         return CoursesUiState.Content(
-            courses.map { course ->
+            lastSync = lastSync,
+            courses = courses.map { course ->
                 CourseSummary(
                     id = course.id,
                     name = course.name,
                     code = course.code,
+                    fromPortal = course.source == CourseSource.PORTAL,
                     analysis = GradeCalculator.analyze(
                         evaluations = course.evaluations,
                         passMark = settings.passMark,

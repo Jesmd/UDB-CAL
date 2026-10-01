@@ -9,7 +9,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.minimo.AppContainer
 import com.example.minimo.data.CourseRepository
 import com.example.minimo.domain.Course
+import com.example.minimo.data.portal.PortalCourses
 import com.example.minimo.domain.CourseAnalysis
+import com.example.minimo.domain.CourseSource
 import com.example.minimo.domain.DecimalInput
 import com.example.minimo.domain.Evaluation
 import com.example.minimo.domain.EvaluationStatus
@@ -51,6 +53,9 @@ sealed interface CourseDetailUiState {
      * @property hasOwnGoal whether the goal was chosen for this course (as opposed to the default one).
      * @property minimumShown whether "Calcular mínimo" was pressed.
      * @property canSimulate whether anything is pending, so a simulation makes sense.
+     * @property fromPortal whether the course comes from the portal (read-only, replaced on each sync).
+     * @property portalZeros for portal activities shown as 0.00: evaluation id to whether the student marked
+     *   it as a real zero (`true`) or it counts as pending (`false`).
      */
     data class Content(
         val course: Course,
@@ -62,6 +67,8 @@ sealed interface CourseDetailUiState {
         val canSimulate: Boolean,
         val simulatorText: String,
         val simulation: SimulationState,
+        val fromPortal: Boolean,
+        val portalZeros: Map<String, Boolean>,
     ) : CourseDetailUiState
 }
 
@@ -96,6 +103,8 @@ class CourseDetailViewModel(
                 canSimulate = canSimulate,
                 simulatorText = text,
                 simulation = simulate(course, data.settings, goal, text),
+                fromPortal = course.source == CourseSource.PORTAL,
+                portalZeros = portalZeros(course, data.zeroConfirmations),
             )
         }
     }
@@ -134,6 +143,11 @@ class CourseDetailViewModel(
         viewModelScope.launch { repository.deleteEvaluation(courseId, evaluationId) }
     }
 
+    /** For a portal activity shown as 0.00: count it as a real zero, or back as pending. */
+    fun setRealZero(evaluationId: String, realZero: Boolean) {
+        viewModelScope.launch { repository.setRealZero(courseId, evaluationId, realZero) }
+    }
+
     fun editCourse(name: String, code: String) {
         val current = (state.value as? CourseDetailUiState.Content)?.course ?: return
         viewModelScope.launch {
@@ -146,6 +160,23 @@ class CourseDetailViewModel(
             repository.deleteCourse(courseId)
             onDeleted()
         }
+    }
+
+    private fun portalZeros(course: Course, confirmations: Set<String>): Map<String, Boolean> {
+        if (course.source != CourseSource.PORTAL || course.code == null) return emptyMap()
+        return course.evaluations.mapNotNull { evaluation ->
+            when (val status = evaluation.status) {
+                EvaluationStatus.Pending -> evaluation.id to false
+                is EvaluationStatus.Graded ->
+                    if (status.grade.signum() == 0 &&
+                        PortalCourses.zeroKey(course.code, evaluation.name) in confirmations
+                    ) {
+                        evaluation.id to true
+                    } else {
+                        null
+                    }
+            }
+        }.toMap()
     }
 
     private fun simulate(course: Course, settings: GradeSettings, goal: BigDecimal, text: String): SimulationState {

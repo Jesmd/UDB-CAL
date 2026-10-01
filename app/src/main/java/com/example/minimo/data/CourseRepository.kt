@@ -4,7 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.minimo.data.portal.PortalCourses
+import com.example.minimo.data.portal.PortalSnapshot
 import com.example.minimo.domain.Course
+import com.example.minimo.domain.CourseSource
+import com.example.minimo.domain.EvaluationStatus
 import com.example.minimo.domain.Evaluation
 import com.example.minimo.domain.GradeSettings
 import java.io.IOException
@@ -62,20 +66,61 @@ class CourseRepository(private val store: DataStore<Preferences>) {
 
     suspend fun setDiagnosticMode(enabled: Boolean) = update { it.copy(diagnosticMode = enabled) }
 
+    /**
+     * Replaces every portal course with [snapshot] in one step; manual courses are never touched.
+     * Goals chosen for portal courses and "real zero" choices are kept. Returns whether it was saved.
+     */
+    suspend fun applyPortalSync(snapshot: PortalSnapshot, syncedAtMillis: Long): Boolean = update { data ->
+        val previousGoals = data.courses.filter { it.source == CourseSource.PORTAL }.associate { it.id to it.goal }
+        val portalCourses = snapshot.courses.map { course ->
+            PortalCourses.toCourse(course, data.zeroConfirmations).let { it.copy(goal = previousGoals[it.id]) }
+        }
+        data.copy(
+            courses = data.courses.filter { it.source == CourseSource.MANUAL } + portalCourses,
+            lastSync = SyncInfo(snapshot.cycle, syncedAtMillis),
+        )
+    }
+
+    /**
+     * Marks a portal activity shown as 0.00 as a real zero ([realZero] = true) or back as pending.
+     * The choice is remembered across syncs by course code + activity name.
+     */
+    suspend fun setRealZero(courseId: String, evaluationId: String, realZero: Boolean) = update { data ->
+        val course = data.courses.firstOrNull { it.id == courseId && it.source == CourseSource.PORTAL } ?: return@update data
+        val code = course.code ?: return@update data
+        val evaluation = course.evaluations.firstOrNull { it.id == evaluationId } ?: return@update data
+        val status = evaluation.status
+        val isPortalZero = status == EvaluationStatus.Pending ||
+            (status is EvaluationStatus.Graded && status.grade.signum() == 0)
+        if (!isPortalZero) return@update data
+
+        val key = PortalCourses.zeroKey(code, evaluation.name)
+        val newStatus = if (realZero) EvaluationStatus.Graded(BigDecimal.ZERO) else EvaluationStatus.Pending
+        data.copy(
+            zeroConfirmations = if (realZero) data.zeroConfirmations + key else data.zeroConfirmations - key,
+            courses = data.courses.map { c ->
+                if (c.id != courseId) c else c.copy(
+                    evaluations = c.evaluations.map { if (it.id == evaluationId) it.copy(status = newStatus) else it },
+                )
+            },
+        )
+    }
+
     private suspend fun updateCourse(courseId: String, change: (Course) -> Course) = update { data ->
         data.copy(courses = data.courses.map { if (it.id == courseId) change(it) else it })
     }
 
-    private suspend fun update(change: (AppData) -> AppData) {
+    /** Applies [change] to the stored data. Returns whether it was saved; failures are also reported. */
+    private suspend fun update(change: (AppData) -> AppData): Boolean {
         try {
             store.edit { prefs -> prefs[KEY] = AppDataCodec.encode(change(read(prefs))) }
+            return true
         } catch (_: IOException) {
-            _saveFailures.tryEmit(Unit)
         } catch (_: SerializationException) {
-            _saveFailures.tryEmit(Unit)
         } catch (_: IllegalArgumentException) {
-            _saveFailures.tryEmit(Unit)
         }
+        _saveFailures.tryEmit(Unit)
+        return false
     }
 
     private fun read(prefs: Preferences): AppData =

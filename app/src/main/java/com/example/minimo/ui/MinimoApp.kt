@@ -37,9 +37,12 @@ import com.example.minimo.ui.detail.CourseDetailViewModel
 import com.example.minimo.ui.portal.PortalScreen
 import com.example.minimo.ui.portal.PortalViewModel
 import com.example.minimo.ui.settings.SettingsScreen
+import com.example.minimo.ui.sync.SyncScreen
+import com.example.minimo.ui.sync.SyncViewModel
 import com.example.minimo.ui.settings.SettingsViewModel
 
 private const val PORTAL_ROUTE = "portal"
+private const val SYNC_ROUTE = "sync"
 private const val COURSE_DETAIL_ROUTE = "course/{$COURSE_ID_ARG}"
 
 private enum class TopLevelDestination(
@@ -98,12 +101,20 @@ fun MinimoApp(container: AppContainer) {
                 CoursesScreen(
                     viewModel = viewModel(factory = CoursesViewModel.factory(container)),
                     onOpenCourse = { navController.navigate("course/$it") },
+                    onSync = { navController.navigate(SYNC_ROUTE) },
                 )
             }
             composable(TopLevelDestination.Settings.route) {
                 SettingsScreen(
                     viewModel = viewModel(factory = SettingsViewModel.factory(container)),
                     onOpenPortal = { navController.navigate(PORTAL_ROUTE) },
+                )
+            }
+            composable(SYNC_ROUTE) {
+                SyncScreen(
+                    viewModel = viewModel(factory = SyncViewModel.factory(container)),
+                    onBack = { navController.popBackStack() },
+                    onDone = { navController.popBackStack() },
                 )
             }
             composable(PORTAL_ROUTE) {
