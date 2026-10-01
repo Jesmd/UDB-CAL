@@ -103,7 +103,7 @@ private fun rememberMotion(enabled: Boolean): Motion {
     return Motion(bob, blink)
 }
 
-private fun DrawScope.drawMimo(mood: MimoMood, eyeOpen: Float) {
+internal fun DrawScope.drawMimo(mood: MimoMood, eyeOpen: Float) {
     val outline = 4.5f
     val body = Path().apply { addOval(androidx.compose.ui.geometry.Rect(Offset(36f, 74f), Size(128f, 118f))) }
 

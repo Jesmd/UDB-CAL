@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onRoot
@@ -61,6 +62,26 @@ class MimoRenderTest {
         save(bitmap, "launcher-icon")
         assertEquals(size, bitmap.width)
         assertEquals("MinimoApp", context.getString(R.string.app_name))
+    }
+
+    /** Transparent PNG of MIMO for the README (written to build/mimo-logo.png). */
+    @Test
+    fun rendersLogoForReadme() {
+        val px = 800
+        val image = androidx.compose.ui.graphics.ImageBitmap(px, px)
+        val canvas = androidx.compose.ui.graphics.Canvas(image)
+        androidx.compose.ui.graphics.drawscope.CanvasDrawScope().draw(
+            androidx.compose.ui.unit.Density(1f),
+            androidx.compose.ui.unit.LayoutDirection.Ltr,
+            canvas,
+            androidx.compose.ui.geometry.Size(px.toFloat(), px.toFloat()),
+        ) {
+            val unit = px / 200f
+            scale(unit, unit, pivot = androidx.compose.ui.geometry.Offset.Zero) {
+                drawMimo(MimoMood.Normal, 1f)
+            }
+        }
+        save(image.asAndroidBitmap(), "mimo-logo")
     }
 
     private fun save(bitmap: Bitmap, name: String) {
