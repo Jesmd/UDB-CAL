@@ -91,7 +91,7 @@ class CourseDetailViewModel(
             CourseDetailUiState.NotFound
         } else {
             val goal = data.settings.effectiveGoal(course.goal)
-            val analysis = GradeCalculator.analyze(course.evaluations, data.settings.passMark, goal)
+            val analysis = GradeCalculator.analyze(course.evaluations, data.settings.passMark, goal, data.settings.roundLikePortal)
             val canSimulate = analysis is CourseAnalysis.Computed && analysis.pendingWeight.signum() > 0
             CourseDetailUiState.Content(
                 course = course,
@@ -183,7 +183,7 @@ class CourseDetailViewModel(
         if (text.isBlank()) return SimulationState.Idle
         val average = DecimalInput.parse(text)
         if (average == null || !Validation.isValidGrade(average)) return SimulationState.Invalid
-        return SimulationState.Result(GradeCalculator.project(course.evaluations, average, settings.passMark, goal))
+        return SimulationState.Result(GradeCalculator.project(course.evaluations, average, settings.passMark, goal, settings.roundLikePortal))
     }
 
     companion object {

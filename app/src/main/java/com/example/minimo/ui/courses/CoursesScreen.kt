@@ -152,6 +152,7 @@ private fun CourseCard(course: CourseSummary, onClick: () -> Unit) {
                         text = stringResource(
                             R.string.courses_summary,
                             analysis.accumulated.toPlainString(),
+                            analysis.accumulatedOnPortal.toPlainString(),
                             analysis.pendingWeight.asPercent(),
                         ),
                         style = MaterialTheme.typography.bodyMedium,
