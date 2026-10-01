@@ -12,7 +12,17 @@ Notas para quien quiera compilar, probar o modificar MinimoApp.
 
 ## Diseño
 
-La interfaz imita el "Liquid Glass" de iOS y está hecha solo con Compose. Los componentes están en `ui/glass/` y la mascota en `ui/mascot/`. En Android 12 o superior el vidrio desenfoca lo que hay detrás; en versiones anteriores usa un relleno esmerilado más opaco. La imagen `docs/mimo.png` se genera con `MimoRenderTest.rendersLogoForReadme`.
+La interfaz imita el "Liquid Glass" de iOS y está hecha solo con Compose. Los componentes están en `ui/glass/` y la mascota en `ui/mascot/`.
+
+El vidrio se dibuja en capas (`GlassSurface.kt`): una sombra suave, lo que hay detrás (desenfocado y más vivo), un cuerpo translúcido, el tinte y la luz del borde. Según la versión de Android:
+
+- Android 13 o superior: dos shaders AGSL (`GlassShaders.kt`). Uno dobla lo que hay detrás a lo largo del borde, como el canto de una lente, con un leve arcoíris en los colores. El otro dibuja el brillo del borde según hacia dónde mira cada tramo, más fuerte donde da la luz (arriba a la izquierda). Solo las barras y los botones flotantes tienen "detrás" (`glassSource`); las tarjetas viven dentro del contenido y no pueden doblar nada.
+- Android 12: desenfoque, y el brillo del borde se dibuja con degradados.
+- Anteriores: relleno esmerilado más opaco.
+
+Si un shader no compila en un teléfono, `GlassShaders` devuelve `null` y esa pieza se dibuja con la versión de Android 12.
+
+La imagen `docs/mimo.png` se genera con `MimoRenderTest.rendersLogoForReadme`.
 
 ## Cómo se calcula
 

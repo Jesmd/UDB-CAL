@@ -75,52 +75,74 @@ data class GlassColors(
     /** Top and bottom of the translucent fill of a glass surface. */
     val fillTop: Color,
     val fillBottom: Color,
-    /** Fill when there is nothing blurred behind (older phones): more opaque so the text stays legible. */
+    /** Fill when there is nothing blurred behind (older phones, dialogs): more opaque so the text stays legible. */
     val fillSolidTop: Color,
     val fillSolidBottom: Color,
-    /** The bright edge where light hits the glass, and the faint opposite edge. */
+    /** The bright edge where light hits the glass, and the faint opposite edge (phones without shaders). */
     val rimLight: Color,
     val rimShade: Color,
+    /** How bright the specular highlight on the glass edge is. 1 is the reference. */
+    val rimStrength: Float,
+    /** A faint line around every glass surface, so its edge reads on any background. */
+    val edge: Color,
     val shadow: Color,
+    /** Opacity of the shadow under a floating glass at 16dp of elevation. Glass shadows are soft and light. */
+    val shadowAlpha: Float,
+    /** How much more vivid the glass makes what is behind it. */
+    val saturation: Float,
     /** Positive / warning accents (secured, reachable) that read on both themes. */
     val success: Color,
     val warning: Color,
-    /** Three soft color blobs drawn behind everything. */
+    /** Soft color blobs drawn behind everything: they are what the glass bends and picks color from. */
     val blobA: Color,
     val blobB: Color,
     val blobC: Color,
+    val blobD: Color,
+    val blobE: Color,
     val isDark: Boolean,
 )
 
 private val LightGlass = GlassColors(
-    fillTop = Color.White.copy(alpha = 0.62f),
-    fillBottom = Color.White.copy(alpha = 0.40f),
-    fillSolidTop = Color.White.copy(alpha = 0.90f),
-    fillSolidBottom = Color.White.copy(alpha = 0.78f),
+    fillTop = Color.White.copy(alpha = 0.60f),
+    fillBottom = Color.White.copy(alpha = 0.38f),
+    fillSolidTop = Color.White.copy(alpha = 0.92f),
+    fillSolidBottom = Color.White.copy(alpha = 0.82f),
     rimLight = Color.White.copy(alpha = 0.95f),
     rimShade = Color(0xFF8E8E93).copy(alpha = 0.28f),
+    rimStrength = 0.9f,
+    edge = Color(0xFF1B2A4A).copy(alpha = 0.10f),
     shadow = Color(0xFF1B2A4A),
+    shadowAlpha = 0.16f,
+    saturation = 1.25f,
     success = Color(0xFF1B8A3C),
     warning = Color(0xFFB45F00),
-    blobA = Color(0xFF7FB8FF).copy(alpha = 0.55f),
-    blobB = Color(0xFFC4A3FF).copy(alpha = 0.40f),
-    blobC = Color(0xFF8FE3D0).copy(alpha = 0.40f),
+    blobA = Color(0xFF7FB8FF).copy(alpha = 0.62f),
+    blobB = Color(0xFFC4A3FF).copy(alpha = 0.46f),
+    blobC = Color(0xFF8FE3D0).copy(alpha = 0.46f),
+    blobD = Color(0xFFFFB3CF).copy(alpha = 0.34f),
+    blobE = Color(0xFF9BDDFF).copy(alpha = 0.34f),
     isDark = false,
 )
 
 private val DarkGlass = GlassColors(
-    fillTop = Color.White.copy(alpha = 0.14f),
-    fillBottom = Color.White.copy(alpha = 0.06f),
-    fillSolidTop = Color(0xFF2A2A30).copy(alpha = 0.94f),
-    fillSolidBottom = Color(0xFF1E1E23).copy(alpha = 0.90f),
+    fillTop = Color.White.copy(alpha = 0.13f),
+    fillBottom = Color.White.copy(alpha = 0.055f),
+    fillSolidTop = Color(0xFF22304F).copy(alpha = 0.97f),
+    fillSolidBottom = Color(0xFF172238).copy(alpha = 0.97f),
     rimLight = Color.White.copy(alpha = 0.50f),
     rimShade = Color.White.copy(alpha = 0.10f),
+    rimStrength = 1.25f,
+    edge = Color.White.copy(alpha = 0.08f),
     shadow = Color.Black,
+    shadowAlpha = 0.34f,
+    saturation = 1.35f,
     success = Color(0xFF30D158),
     warning = Color(0xFFFFB340),
-    blobA = Color(0xFF0A84FF).copy(alpha = 0.40f),
-    blobB = Color(0xFF7D4DFF).copy(alpha = 0.32f),
-    blobC = Color(0xFF00B3A4).copy(alpha = 0.26f),
+    blobA = Color(0xFF0A84FF).copy(alpha = 0.55f),
+    blobB = Color(0xFF7D4DFF).copy(alpha = 0.42f),
+    blobC = Color(0xFF00B3A4).copy(alpha = 0.34f),
+    blobD = Color(0xFFFF5C93).copy(alpha = 0.16f),
+    blobE = Color(0xFF5AC8FA).copy(alpha = 0.22f),
     isDark = true,
 )
 

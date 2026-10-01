@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -137,6 +138,31 @@ class GlassRenderTest {
         rule.onNodeWithText("¿Seguro?").assertIsDisplayed()
         rule.onNodeWithText("Cancelar").performClick()
         assert(dismissed)
+    }
+
+    /** Renders the dialog on its own (build/glass-dialog.png) to look at how its glass is drawn. */
+    @Test
+    fun rendersDialog() {
+        rule.setContent {
+            MinimoTheme(darkTheme = true) {
+                GlassDialog(
+                    title = "Nueva materia",
+                    onDismiss = {},
+                    buttons = {
+                        GlassButton("Cancelar", {}, Modifier.weight(1f), style = GlassButtonStyle.Regular)
+                        GlassButton("Guardar", {}, Modifier.weight(1f))
+                    },
+                ) {
+                    GlassTextField("", {}, "Nombre", Modifier.fillMaxWidth())
+                    GlassTextField("", {}, "Código (opcional)", Modifier.fillMaxWidth())
+                }
+            }
+        }
+        rule.waitForIdle()
+        val bitmap = rule.onNode(isDialog()).captureToImage().asAndroidBitmap()
+        val out = File("build/glass-dialog.png")
+        out.parentFile?.mkdirs()
+        out.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
     @Test

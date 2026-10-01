@@ -43,14 +43,14 @@ enum class MimoMood {
 
 private val Navy = Color(0xFF0B1B3A)
 private val Blue = Color(0xFF007AFF)
-private val BlueShade = Color(0xFF0062D9)
-private val HeadShade = Color(0xFFE1E6F1)
+private val Shade = Color(0xFFE1E6F1)
+private val HeadShadow = Color(0xFFB8C3DC)
 private val Mint = Color(0xFF8FE3D0)
 
 private const val DESIGN = 200f
 
 /**
- * MIMO, the app's mascot: a round blue body with a white head and a dark visor, drawn flat with a navy outline.
+ * MIMO, the app's mascot: a white robot, round body and dome head, with a dark visor, drawn flat with a navy outline.
  *
  * @param animated bobs gently and blinks; ignored when the system has animations turned off.
  */
@@ -110,16 +110,16 @@ internal fun DrawScope.drawMimo(mood: MimoMood, eyeOpen: Float) {
     // Ground shadow.
     drawOval(Color.Black.copy(alpha = 0.10f), Offset(52f, 188f), Size(96f, 10f))
 
-    // Body, with a flat shade on the lower right.
-    drawPath(body, Blue)
+    // Body: white like the head, with a flat shade on the lower right.
+    drawPath(body, Color.White)
     clipPath(body) {
-        drawOval(BlueShade, Offset(62f, 100f), Size(130f, 112f))
+        drawOval(Shade, Offset(62f, 100f), Size(130f, 112f))
         // The head throws a flat shadow on the body.
-        drawRoundRect(Navy.copy(alpha = 0.28f), Offset(40f, 80f), Size(120f, 22f), CornerRadius(11f))
+        drawRoundRect(HeadShadow, Offset(40f, 80f), Size(120f, 22f), CornerRadius(11f))
     }
     drawPath(body, Navy, style = Stroke(outline))
 
-    // "MIMO" badge: three little marks stand in for text so it stays crisp at every size.
+    // "MIMO" badge: letters built from strokes so it stays crisp at every size.
     drawMimoLabel()
 
     // Antenna.
@@ -140,7 +140,7 @@ internal fun DrawScope.drawMimo(mood: MimoMood, eyeOpen: Float) {
     }
     drawPath(head, Color.White)
     clipPath(head) {
-        drawOval(HeadShade, Offset(96f, 24f), Size(90f, 100f))
+        drawOval(Shade, Offset(96f, 24f), Size(90f, 100f))
     }
     drawPath(head, Navy, style = Stroke(outline))
 
@@ -173,12 +173,12 @@ private fun DrawScope.drawEyes(mood: MimoMood, open: Float) {
 }
 
 private fun DrawScope.drawMimoLabel() {
-    // Letters M-I-M-O built from strokes, white on the blue body.
+    // Letters M-I-M-O built from strokes, blue on the white body.
     val w = 3.8f
     val top = 114f
     val bottom = 134f
     fun line(x1: Float, y1: Float, x2: Float, y2: Float) =
-        drawLine(Color.White, Offset(x1, y1), Offset(x2, y2), strokeWidth = w, cap = StrokeCap.Round)
+        drawLine(Blue, Offset(x1, y1), Offset(x2, y2), strokeWidth = w, cap = StrokeCap.Round)
     // M
     line(66f, bottom, 66f, top); line(66f, top, 73f, bottom - 8f); line(73f, bottom - 8f, 80f, top); line(80f, top, 80f, bottom)
     // I
@@ -186,5 +186,5 @@ private fun DrawScope.drawMimoLabel() {
     // M
     line(98f, bottom, 98f, top); line(98f, top, 105f, bottom - 8f); line(105f, bottom - 8f, 112f, top); line(112f, top, 112f, bottom)
     // O
-    drawRoundRect(Color.White, Offset(122f, top), Size(16f, bottom - top), CornerRadius(8f), style = Stroke(w))
+    drawRoundRect(Blue, Offset(122f, top), Size(16f, bottom - top), CornerRadius(8f), style = Stroke(w))
 }

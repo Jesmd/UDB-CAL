@@ -48,6 +48,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -82,7 +83,7 @@ fun GlassCard(
     val surface = base.glassSurface(
         shape = shape,
         backdrop = null,
-        shadowElevation = 8.dp,
+        shadowElevation = 6.dp,
         pressed = press.provider,
     )
     val interactive = if (onClick != null) {
@@ -91,6 +92,15 @@ fun GlassCard(
         surface
     }
     Column(interactive, content = content)
+}
+
+/**
+ * Fades a disabled control. Each part fades by itself: a single faded layer would cut the shadow off in a rectangle
+ * around the control.
+ */
+private fun Modifier.fadeWhenDisabled(enabled: Boolean): Modifier = graphicsLayer {
+    alpha = if (enabled) 1f else 0.45f
+    compositingStrategy = CompositingStrategy.ModulateAlpha
 }
 
 enum class GlassButtonStyle {
@@ -134,14 +144,16 @@ fun GlassButton(
     }
     Row(
         modifier
-            .alpha(if (enabled) 1f else 0.45f)
+            .fadeWhenDisabled(enabled)
             .glassPressScale(press)
             .heightIn(min = if (compact) 40.dp else 52.dp)
             .glassSurface(
                 shape = CircleShape,
                 backdrop = backdrop,
                 tint = tint,
-                shadowElevation = if (filled) 10.dp else 6.dp,
+                shadowElevation = if (filled) 8.dp else 5.dp,
+                blurRadius = 8.dp,
+                refraction = if (compact) GlassRefraction.Compact else GlassRefraction.Standard,
                 pressed = press.provider,
             )
             .glassClickable(press, onClick, enabled = enabled, role = Role.Button)
@@ -168,10 +180,17 @@ fun GlassIconButton(
     val press = rememberGlassPress()
     Box(
         modifier
-            .alpha(if (enabled) 1f else 0.45f)
+            .fadeWhenDisabled(enabled)
             .glassPressScale(press, 0.9f)
             .size(48.dp)
-            .glassSurface(CircleShape, backdrop = backdrop, shadowElevation = 8.dp, pressed = press.provider)
+            .glassSurface(
+                CircleShape,
+                backdrop = backdrop,
+                shadowElevation = 6.dp,
+                blurRadius = 8.dp,
+                refraction = GlassRefraction.Compact,
+                pressed = press.provider,
+            )
             .glassClickable(press, onClick, enabled = enabled, role = Role.Button)
             .semantics { this.contentDescription = contentDescription },
         contentAlignment = Alignment.Center,

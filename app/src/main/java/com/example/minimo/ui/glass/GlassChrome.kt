@@ -152,7 +152,7 @@ fun GlassTopBar(
     Box(
         modifier
             .fillMaxWidth()
-            .glassSurface(GlassStrip, shadowElevation = 0.dp, visibility = progress, rim = false)
+            .glassSurface(GlassStrip, shadowElevation = 0.dp, blurRadius = 14.dp, visibility = progress, rim = false, refraction = null)
             .drawBehind {
                 val alpha = (progress() * 0.55f).coerceIn(0f, 1f)
                 drawLine(
@@ -252,6 +252,12 @@ fun GlassTabBar(
         animationSpec = spring(dampingRatio = 0.55f, stiffness = 400f),
         label = "tabLensGrow",
     )
+    // While the lens is held it also zooms what is under it, like a magnifying glass.
+    val zoom by animateFloatAsState(
+        targetValue = if (touching) 1f else 0f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 300f),
+        label = "tabLensZoom",
+    )
     val padding = 5.dp
     val count = tabs.size
     // The gesture loop must survive selection changes, so it reads the latest values instead of restarting.
@@ -263,7 +269,7 @@ fun GlassTabBar(
             .fillMaxWidth()
             .widthIn(max = 420.dp)
             .height(TabBarHeight)
-            .glassSurface(CircleShape, shadowElevation = 20.dp, blurRadius = 26.dp)
+            .glassSurface(CircleShape, shadowElevation = 18.dp, blurRadius = 9.dp, refraction = GlassRefraction.Standard)
             .pointerInput(count) {
                 awaitEachGesture {
                     val inner = size.width - 2 * padding.toPx()
@@ -299,7 +305,7 @@ fun GlassTabBar(
         // The lens.
         Box(
             Modifier
-                .offset { IntOffset((padding + itemWidth * position).roundToPx(), padding.roundToPx()) }
+                .offset { IntOffset((padding + itemWidth * position).roundToPx(), 0) }
                 .width(itemWidth)
                 .fillMaxHeight()
                 .padding(vertical = padding)
@@ -310,9 +316,12 @@ fun GlassTabBar(
                 }
                 .glassSurface(
                     CircleShape,
-                    backdrop = null,
                     shadowElevation = 0.dp,
+                    blurRadius = 4.dp,
+                    refraction = GlassRefraction.Lens,
+                    magnify = { 1.03f + 0.10f * zoom },
                     pressed = { if (touching) 0.5f else 0f },
+                    rimStrength = 1.15f,
                 )
                 .background(colors.primary.copy(alpha = 0.12f), CircleShape),
         )
@@ -416,7 +425,7 @@ fun GlassDialog(
                     .glassSurface(
                         RoundedCornerShape(32.dp),
                         backdrop = null,
-                        shadowElevation = 28.dp,
+                        shadowElevation = 20.dp,
                         solid = !windowBlur,
                     )
                     .padding(22.dp),
@@ -452,7 +461,7 @@ fun GlassSnackbarHost(state: SnackbarHostState, modifier: Modifier = Modifier) {
             Modifier
                 .padding(horizontal = 20.dp)
                 .widthIn(max = 460.dp)
-                .glassSurface(RoundedCornerShape(24.dp), shadowElevation = 18.dp, blurRadius = 24.dp)
+                .glassSurface(RoundedCornerShape(24.dp), shadowElevation = 14.dp, blurRadius = 10.dp, refraction = GlassRefraction.Compact)
                 .padding(horizontal = 20.dp, vertical = 14.dp),
         ) {
             Text(data.visuals.message, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
