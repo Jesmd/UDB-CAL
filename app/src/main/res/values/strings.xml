@@ -35,7 +35,7 @@
     <string name="detail_not_found">Esta materia ya no existe.</string>
     <string name="detail_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
     <string name="weights_sum_short">Los porcentajes suman %1$s</string>
-    <string name="detail_weights_warning">Los porcentajes suman %1$s, no 100%. El cálculo usa los porcentajes tal como están.</string>
+    <string name="detail_weights_warning">Los porcentajes suman %1$s, no 100%%. El cálculo usa los porcentajes tal como están.</string>
     <string name="evaluations_title">Evaluaciones</string>
     <string name="evaluations_add">Agregar</string>
     <string name="evaluations_empty">Esta materia no tiene evaluaciones. Agrégalas para poder calcular.</string>
