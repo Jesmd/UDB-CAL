@@ -1,16 +1,23 @@
 package com.example.minimo.ui.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -18,12 +25,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.minimo.R
+import com.example.minimo.data.portal.SessionState
 import com.example.minimo.domain.DecimalInput
 import com.example.minimo.domain.GradeSettings
 import com.example.minimo.domain.Validation
@@ -33,7 +42,7 @@ import com.example.minimo.ui.asThreshold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel) {
+fun SettingsScreen(viewModel: SettingsViewModel, onOpenPortal: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -44,16 +53,25 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         when (val current = state) {
             SettingsUiState.Loading -> LoadingBox(modifier)
             SettingsUiState.Error -> MessageBox(stringResource(R.string.storage_read_error), modifier)
-            is SettingsUiState.Content -> SettingsForm(current.settings, viewModel::save, modifier)
+            is SettingsUiState.Content -> Column(modifier.imePadding().verticalScroll(rememberScrollState())) {
+                GradeSettingsForm(current.settings, viewModel::save)
+                HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+                PortalSection(
+                    session = current.session,
+                    diagnosticMode = current.diagnosticMode,
+                    onOpenPortal = onOpenPortal,
+                    onLogout = viewModel::logout,
+                    onDiagnosticChange = viewModel::setDiagnosticMode,
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun SettingsForm(
+private fun GradeSettingsForm(
     settings: GradeSettings,
     onSave: (GradeSettings) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     var passMarkText by rememberSaveable { mutableStateOf(settings.passMark.asThreshold()) }
     var goalText by rememberSaveable { mutableStateOf(settings.defaultGoal.asThreshold()) }
@@ -64,8 +82,8 @@ private fun SettingsForm(
         (passMark.compareTo(settings.passMark) != 0 || goal.compareTo(settings.defaultGoal) != 0)
 
     Column(
-        modifier = modifier.verticalScroll(rememberScrollState()).padding(16.dp),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         OutlinedTextField(
             value = passMarkText,
@@ -103,5 +121,48 @@ private fun SettingsForm(
             enabled = changed,
             onClick = { onSave(GradeSettings(checkNotNull(passMark), checkNotNull(goal))) },
         ) { Text(stringResource(R.string.action_save)) }
+    }
+}
+
+@Composable
+private fun PortalSection(
+    session: SessionState,
+    diagnosticMode: Boolean,
+    onOpenPortal: () -> Unit,
+    onLogout: () -> Unit,
+    onDiagnosticChange: (Boolean) -> Unit,
+) {
+    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(stringResource(R.string.settings_portal_title), style = MaterialTheme.typography.titleMedium)
+        Text(
+            stringResource(R.string.settings_portal_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        val stateText = stringResource(
+            when (session) {
+                SessionState.LoggedOut -> R.string.session_logged_out
+                SessionState.LoggedIn -> R.string.session_logged_in
+                SessionState.Expired -> R.string.session_expired
+            },
+        )
+        Text(stringResource(R.string.settings_portal_state, stateText), style = MaterialTheme.typography.bodyLarge)
+        Button(onClick = onOpenPortal) {
+            Text(
+                stringResource(if (session == SessionState.LoggedIn) R.string.portal_open else R.string.portal_open_login),
+            )
+        }
+        OutlinedButton(onClick = onLogout) { Text(stringResource(R.string.portal_logout)) }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.diagnostic_title), style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    stringResource(R.string.diagnostic_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Switch(checked = diagnosticMode, onCheckedChange = onDiagnosticChange, modifier = Modifier.padding(start = 8.dp))
+        }
     }
 }

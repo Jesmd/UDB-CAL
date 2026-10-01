@@ -20,6 +20,7 @@ internal data class AppDataDto(
     val passMark: String = "6.0",
     val defaultGoal: String = "6.0",
     val courses: List<CourseDto> = emptyList(),
+    val diagnosticMode: Boolean = false,
 )
 
 @Serializable
@@ -57,6 +58,7 @@ internal object AppDataCodec {
         passMark = settings.passMark.toPlainString(),
         defaultGoal = settings.defaultGoal.toPlainString(),
         courses = courses.map { it.toDto() },
+        diagnosticMode = diagnosticMode,
     )
 
     private fun Course.toDto() = CourseDto(
@@ -78,6 +80,7 @@ internal object AppDataCodec {
     private fun AppDataDto.toDomain() = AppData(
         settings = GradeSettings(BigDecimal(passMark), BigDecimal(defaultGoal)),
         courses = courses.map { it.toDomain() },
+        diagnosticMode = diagnosticMode,
     )
 
     private fun CourseDto.toDomain() = Course(
