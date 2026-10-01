@@ -21,6 +21,9 @@ internal data class AppDataDto(
     val defaultGoal: String = "6.0",
     val courses: List<CourseDto> = emptyList(),
     val diagnosticMode: Boolean = false,
+    val zeroConfirmations: List<String> = emptyList(),
+    val lastSyncCycle: String? = null,
+    val lastSyncAt: Long? = null,
 )
 
 @Serializable
@@ -59,6 +62,9 @@ internal object AppDataCodec {
         defaultGoal = settings.defaultGoal.toPlainString(),
         courses = courses.map { it.toDto() },
         diagnosticMode = diagnosticMode,
+        zeroConfirmations = zeroConfirmations.sorted(),
+        lastSyncCycle = lastSync?.cycle,
+        lastSyncAt = lastSync?.syncedAtMillis,
     )
 
     private fun Course.toDto() = CourseDto(
@@ -81,6 +87,8 @@ internal object AppDataCodec {
         settings = GradeSettings(BigDecimal(passMark), BigDecimal(defaultGoal)),
         courses = courses.map { it.toDomain() },
         diagnosticMode = diagnosticMode,
+        zeroConfirmations = zeroConfirmations.toSet(),
+        lastSync = lastSyncAt?.let { SyncInfo(lastSyncCycle, it) },
     )
 
     private fun CourseDto.toDomain() = Course(

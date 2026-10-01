@@ -14,7 +14,7 @@ import android.webkit.WebViewClient
 import com.example.minimo.data.portal.PortalUrls
 
 /** Events the in-app browser reports to its screen. */
-internal interface PortalWebListener {
+interface PortalWebListener {
     fun onPageStarted(url: String?)
     fun onPageFinished(url: String?)
     fun onProgress(percent: Int)
@@ -31,7 +31,7 @@ internal interface PortalWebListener {
  * here: the only script it ever runs is the read-only snapshot on pages behind the login (see PortalScreen).
  */
 @SuppressLint("SetJavaScriptEnabled")
-internal fun createPortalWebView(context: Context, listener: PortalWebListener): WebView =
+fun createPortalWebView(context: Context, listener: PortalWebListener): WebView =
     WebView(context).apply {
         settings.apply {
             javaScriptEnabled = true
