@@ -16,7 +16,6 @@
     <!-- Courses list -->
     <string name="courses_title">Materias</string>
     <string name="courses_empty_title">Aún no hay materias</string>
-    <string name="courses_empty_hint">Agrega tu primera materia con el botón +.</string>
     <string name="courses_add">Agregar materia</string>
     <string name="courses_no_evaluations">Sin evaluaciones</string>
     <string name="courses_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
@@ -114,4 +113,40 @@
     <string name="portal_html_saved">HTML guardado.</string>
     <string name="portal_html_failed">No se pudo guardar el archivo.</string>
     <string name="portal_html_read_failed">No se pudo leer la página.</string>
+
+    <!-- Sync -->
+    <string name="sync_action">Sincronizar</string>
+    <string name="sync_title">Sincronizar con el portal</string>
+    <string name="sync_needs_login">Inicia sesión en el portal para sincronizar. La app nunca ve tu contraseña; la sincronización sigue sola al entrar.</string>
+    <string name="sync_opening">Abriendo tus notas en el portal…</string>
+    <string name="sync_reading_courses">Leyendo tus materias…</string>
+    <string name="sync_reading_progress">Leyendo materia %1$d de %2$d…</string>
+    <plurals name="sync_done">
+        <item quantity="one">Listo: %1$d materia sincronizada.</item>
+        <item quantity="many">Listo: %1$d materias sincronizadas.</item>
+        <item quantity="other">Listo: %1$d materias sincronizadas.</item>
+    </plurals>
+    <plurals name="sync_done_cycle">
+        <item quantity="one">Listo: %1$d materia sincronizada del ciclo %2$s.</item>
+        <item quantity="many">Listo: %1$d materias sincronizadas del ciclo %2$s.</item>
+        <item quantity="other">Listo: %1$d materias sincronizadas del ciclo %2$s.</item>
+    </plurals>
+    <string name="sync_view_courses">Ver materias</string>
+    <string name="sync_failed_network">No se pudo conectar con el portal. Revisa tu conexión. Tus datos no se modificaron.</string>
+    <string name="sync_failed_timeout">El portal tardó demasiado en responder. Tus datos no se modificaron.</string>
+    <string name="sync_failed_format">El portal cambió y la app no pudo leer tus notas. Tus datos no se modificaron; puedes seguir usando el modo manual.</string>
+    <string name="sync_failed_detail">El portal no mostró el detalle de una materia. Puede que la sesión haya expirado; inténtalo de nuevo. Tus datos no se modificaron.</string>
+    <string name="sync_failed_save">Se leyeron tus notas, pero no se pudieron guardar.</string>
+    <string name="courses_last_sync">Ciclo %1$s · sincronizado: %2$s</string>
+    <string name="courses_last_sync_no_cycle">Sincronizado: %1$s</string>
+    <string name="courses_from_portal">Del portal</string>
+    <string name="courses_portal_no_activities">El portal aún no muestra actividades</string>
+    <string name="courses_empty_hint_sync">Agrega una materia con el botón + o pulsa Sincronizar para traerlas del portal.</string>
+
+    <!-- Portal courses in detail -->
+    <string name="detail_portal_source">Del portal · %1$s</string>
+    <string name="detail_portal_read_only">Las actividades vienen del portal y se actualizan al sincronizar.</string>
+    <string name="evaluation_real_zero">Es un 0 real</string>
+    <string name="evaluation_back_to_pending">Marcar como pendiente</string>
+    <string name="evaluation_portal_zero_hint">El portal muestra 0.00</string>
 </resources>

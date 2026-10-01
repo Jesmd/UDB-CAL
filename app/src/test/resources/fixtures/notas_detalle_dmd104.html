@@ -1,0 +1,2093 @@
+<html lang="es-sv" class="h-100"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas - Estudiantes</title>
+    <link rel="shortcut icon" href="https://admacad.udb.edu.sv/Recursos/imagenes/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/css/smart_wizard_all.css">
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/udbestudiantes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/css/fileinput.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/themes/explorer-fas/theme.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/plugins/fullcalendarV5/main.min.css">
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/css/animate.css">
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/plugins/bootstrap-tour/css/bs5-tour.css">
+
+
+    <link rel="stylesheet" href="https://admacad.udb.edu.sv/Recursos/plugins/quill/1.3.6/css/quill.snow.css">
+    
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="/EstudiantesPlus/Scripts/jquery.signalR-2.4.2.min.js"></script>
+    <script src="/EstudiantesPlus/signalr/hubs"></script>
+    <!--DataTable-->
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.bootstrap4.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/dataTables.rowGroup.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js" type="text/javascript"></script>
+    <!--UDB-->
+    <script src="https://admacad.udb.edu.sv/Recursos/js/constantes.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/chosen-js/chosen.jquery.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/chosen-readonly/dist/chosen-readonly.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/moment.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/bootstrap-datetimepicker.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/UTL.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/jquery.smartwizard5.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/bootstrap-tour/js/bs5-tour.js" type="text/javascript"></script>
+    <!--bootstrap-fileinput-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/fileinput.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/locales/es.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/themes/fas/theme.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/themes/explorer-fas/theme.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/imask.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/fullcalendarV5/main.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/fullcalendarV5/locales-all.min.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/quill/1.3.6//js/quill.js" type="text/javascript"></script>
+    <script src="https://admacad.udb.edu.sv/Recursos/plugins/bootstrap-notify/3.1.3/bootstrap-notify.js" type="text/javascript"></script>
+    <script src="https://www.google.com/jsapi" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/charts/loader.js" type="text/javascript"></script>
+    <script>
+        var VistaCarritoEstudiantePlus = "";  //Vista de recarga de registros vinculado al carrito
+    </script>
+    <style>
+        /* rows */
+        div.dropdown-multicol {
+            width: 25em;
+        }
+
+        div.dropdown-row > a.dropdown-item {
+            display: inline-block;
+            width: 32%;
+        }
+
+        /* Columns */
+        div.dropdown-multicol2 {
+            width: 30em;
+        }
+
+            div.dropdown-multicol2 > div.dropdown-col {
+                display: inline-block;
+                width: 32%;
+            }
+    </style>
+</head>
+<body class="Estudiantes d-flex flex-column h-100">
+
+    <main role="main" class="flex-shrink-0 mb-3">
+        
+<nav class="navbar navbar-menu navbar-expand-lg fixed-top navbar-light bg-estudiantes ps-3 pe-3">
+
+    <a class="navbar-brand text-white" href="/EstudiantesPlus/"><strong>Estudiantes</strong></a>
+
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="nav navbar-nav ms-auto d-lg-flex" style="color:white">
+
+            <li class="nav-item" id="liCarrito">
+                <a class="nav-link p2" data-bs-toggle="offcanvas" href="#offcanvasCarrito" role="button" aria-controls="offcanvasCarrito">
+                    <i class="fas fa-shopping-cart fa-inverse fa-lg" aria-hidden="true" data-bs-toggle="offcanvas" href="#offcanvasCarrito"></i>
+                    <span id="tbCantCarrito" class="badge pill-rounded bg-warning" data-bs-toggle="offcanvas" href="#offcanvasCarrito"></span>
+                </a>
+            </li>
+            
+            <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white" id="DDlMenu" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-th fa-inverse "></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-end dropdown-multicol ps-2" aria-labelledby="DDlMenu" style="background-color: #faf7f7; ">
+        <div class="dropdown-row">
+            <a class="dropdown-item" href="/EstudiantesPlus/PerfilHoraVinculacion">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-handshake"></i>
+                    </span>
+                    <div>
+                        <small>Horas de<br> Vinculación </small>
+                    </div>
+                </div>
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/HorasSociales">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-people-carry"></i>
+                    </span>
+                    <div>
+                        <small>Servicio<br> Social</small>
+                    </div>
+                </div>
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/PCPlanificaciones">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-clipboard-list"></i>
+                    </span>
+                    <div>
+                        <small>Planificacion<br>Módulos</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="dropdown-row">
+            <a class="dropdown-item" href="/EstudiantesPlus/ProcedimientosAcademicos">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-address-card"></i>
+                    </span>
+                    <div>
+                        <small>
+                            Procedimientos<br>
+                            Académicos
+                        </small>
+                    </div>
+                </div>
+
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/ApelacionCuota">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-user-shield"></i>
+                    </span>
+                    <div>
+                        <small>
+                            Apelación<br>
+                            de Couta
+                        </small>
+                    </div>
+                </div>
+
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/CuartaMatricula">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    <div>
+                        <small>
+                            4a<br>
+                            Matrícula
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="dropdown-row">
+            <a class="dropdown-item" href="/EstudiantesPlus/DOCDocumentoLinea">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-mail-bulk"></i>
+                    </span>
+                    <div>
+                        <small>
+                            Documentos<br>
+                            en Línea
+                        </small>
+                    </div>
+                </div>
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/ACADProcesoGraduacion">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <div>
+                        <small>
+                            Proceso de<br>
+                            Graduación
+                        </small>
+                    </div>
+                </div>
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/Tickets">
+                <div class="text-center mb-1">
+                    <span class="p-1" style="font-size: 2em; color: #0D6EFD;">
+                        <i class="fas fa-bug"></i>
+                    </span>
+                    <div>
+                        <small>
+                            Ticket<br>
+                            &nbsp;
+                        </small>
+                    </div>
+                </div>
+            </a>
+            <a class="dropdown-item" href="/EstudiantesPlus/SPPInforme/InformeCIVU" style="text-decoration:none;">
+
+                <div class="text-center mb-1 ">
+                    <span class="p-1" style="font-size: 3em; color: #0D6EFD;">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </span>
+                    <div>
+                        <small class="text-wrap">
+                            Perfil Psicopedagógico
+                        </small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</li>
+
+            
+            <li class="nav-item" id="liNotificaciones">
+                <a class="nav-link p-2" href="#modalNotificaciones" data-bs-toggle="modal" onclick="modal()">
+                    <i class="far fa-bell fa-inverse"></i>
+                    <span id="txtR" class="badge pill-rounded bg-danger badge-notificacion" title="Sin ver" style="display: none;"></span>
+                    <span id="txtP" class="badge pill-rounded bg-warning badge-notificacionPendientes" title="Sin ejecutar" style="display: none;"></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white p-1" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <img src="/EstudiantesPlus/Home/ObtenerImagen" alt="" class="rounded-circle" style="width: 30px; height: 35px">
+                            XX000000
+                        </a>
+
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a href="#" onclick="IrPrograma('https://admacad.udb.edu.sv/PortalWeb/', 56, 'https%3a%2f%2fportal.udb.edu.sv%2fEstudiantesPlus%2fNotas'); return false;" class="dropdown-item"><i class="fas fa-key"></i> Cambiar Contraseña</a>
+                    <hr>
+                    <a class="dropdown-item" href="#" onclick="Onlogout(); return false;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+        <div class="container">
+            
+
+
+<h1 class="text-center mb-3">Notas</h1>
+
+<style>
+    .row.highlight:hover {
+        background-color: lightgrey;
+    }
+
+    .row.highlight.active {
+        background-color: lightgray;
+    }
+
+    .row.highlight:hover {
+        cursor: default;
+    }
+
+    #_FichaAlumno_TBLCarreras .active {
+        background-color: #D3D3D3;
+    }
+
+</style>
+
+<div class="card card-udb mb-3">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-lg-2 col-md-12 cubo2 text-center">
+                <img src="/EstudiantesPlus/Home/ObtenerImagenP/0" alt="profile-image" class="rounded-circle" style="max-width: 100px; max-height: 100px; border-radius: 50%; border: 2px solid white; box-shadow: 3px 3px 20px rgb(0 0 0 / 50%);">
+            </div>
+            <div class="col-lg-10 col-md-12">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <small>Estudiante</small>
+                                <h5>
+                                    [XX000000] Estudiante De Ejemplo
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                                <div class="col-12">
+                                        <small>Carrera</small>
+                                        <h5 class="mt-1">[000] Carrera de ejemplo</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                        <small>Campus</small>
+                                        <h5 class="mt-1">Campus de ejemplo</h5>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                        <small>Nombre de Programa:</small>
+                                        <h5 class="mt-1">UDB</h5>
+                                </div>
+                        </div>
+                    </div>
+                        <div class="col-lg-3 ps-0 ms-0 text-center">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                                            <small>Plan</small>
+                                            <h5 class="mt-1">2024</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-3 px-0">
+                                            <small>CUM</small>
+                                            <h5 class="mt-1">0.00</h5>
+                                    </div>
+                                    <div class="col-lg-5 col-md-5 col-sm-5 col-5 ps-0">
+                                            <small>Avance</small>
+                                            <h5 class="mt-1">0.00 %</h5>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                            <small>Máximo UV</small>
+                                            <h5 class="mt-1">32</h5>
+
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 px-0">
+                                            <small>UV Inscritas</small>
+                                            <h5 class="mt-1" id="LBUVInscritas">12</h5>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar mt-3 navbar-udb navbar-expand">
+    <div class="collapse navbar-collapse" style="height: 54px;">
+        
+        <ul class="nav navbar-nav me-auto">
+            <li class="nav-item ">
+                    <form class="d-flex">
+                        <label class="mt-2 ms-3 me-3">Ciclo:</label>
+                        <select autocomplete="off" class="form-control chosen-select" data-placeholder="Seleccione una opción" id="DDLModulo" name="DDLModulo"><option selected="selected" value="02 2026">02 2026</option>
+<option value="01 2027">01 2027</option>
+<option value="01 2026">01 2026</option>
+<option value="01 2025">01 2025</option>
+<option value="02 2025">02 2025</option>
+<option value="03 2025">03 2025</option>
+<option value="01 2024">01 2024</option>
+<option value="02 2024">02 2024</option>
+<option value="03 2024">03 2024</option>
+<option value="01 2023">01 2023</option>
+<option value="02 2023">02 2023</option>
+<option value="03 2023">03 2023</option>
+<option value="01 2022">01 2022</option>
+<option value="02 2022">02 2022</option>
+<option value="03 2022">03 2022</option>
+<option value="01 2021">01 2021</option>
+<option value="02 2021">02 2021</option>
+<option value="03 2021">03 2021</option>
+<option value="01 2020">01 2020</option>
+<option value="02 2020">02 2020</option>
+<option value="03 2020">03 2020</option>
+<option value="01 2019">01 2019</option>
+<option value="02 2019">02 2019</option>
+<option value="03 2019">03 2019</option>
+<option value="01 2018">01 2018</option>
+<option value="02 2018">02 2018</option>
+<option value="03 2018">03 2018</option>
+<option value="01 2017">01 2017</option>
+<option value="02 2017">02 2017</option>
+<option value="03 2017">03 2017</option>
+<option value="01 2016">01 2016</option>
+<option value="02 2016">02 2016</option>
+<option value="03 2016">03 2016</option>
+<option value="01 2015">01 2015</option>
+<option value="02 2015">02 2015</option>
+<option value="03 2015">03 2015</option>
+<option value="01 2014">01 2014</option>
+<option value="02 2014">02 2014</option>
+<option value="03 2014">03 2014</option>
+<option value="01 2013">01 2013</option>
+<option value="02 2013">02 2013</option>
+<option value="03 2013">03 2013</option>
+<option value="01 2012">01 2012</option>
+<option value="02 2012">02 2012</option>
+<option value="03 2012">03 2012</option>
+<option value="01 2011">01 2011</option>
+<option value="02 2011">02 2011</option>
+<option value="03 2011">03 2011</option>
+<option value="01 2010">01 2010</option>
+<option value="02 2010">02 2010</option>
+<option value="03 2010">03 2010</option>
+<option value="01 2009">01 2009</option>
+<option value="02 2009">02 2009</option>
+<option value="03 2009">03 2009</option>
+<option value="01 2008">01 2008</option>
+<option value="02 2008">02 2008</option>
+<option value="03 2008">03 2008</option>
+<option value="01 2007">01 2007</option>
+<option value="02 2007">02 2007</option>
+<option value="03 2007">03 2007</option>
+<option value="01 2006">01 2006</option>
+<option value="02 2006">02 2006</option>
+<option value="03 2006">03 2006</option>
+<option value="01 2005">01 2005</option>
+<option value="02 2005">02 2005</option>
+<option value="03 2005">03 2005</option>
+<option value="01 2004">01 2004</option>
+<option value="02 2004">02 2004</option>
+<option value="03 2004">03 2004</option>
+<option value="01 2003">01 2003</option>
+<option value="02 2003">02 2003</option>
+<option value="03 2003">03 2003</option>
+<option value="01 2002">01 2002</option>
+<option value="02 2002">02 2002</option>
+<option value="03 2002">03 2002</option>
+<option value="01 2001">01 2001</option>
+<option value="02 2001">02 2001</option>
+<option value="03 2001">03 2001</option>
+<option value="01 2000">01 2000</option>
+<option value="02 2000">02 2000</option>
+<option value="03 2000">03 2000</option>
+<option value="01 1999">01 1999</option>
+<option value="02 1999">02 1999</option>
+<option value="03 1999">03 1999</option>
+<option value="01 1998">01 1998</option>
+<option value="02 1998">02 1998</option>
+<option value="03 1998">03 1998</option>
+<option value="01 1997">01 1997</option>
+<option value="02 1997">02 1997</option>
+<option value="03 1997">03 1997</option>
+<option value="01 1996">01 1996</option>
+<option value="02 1996">02 1996</option>
+<option value="03 1996">03 1996</option>
+<option value="01 1995">01 1995</option>
+<option value="02 1995">02 1995</option>
+<option value="03 1995">03 1995</option>
+<option value="01 1994">01 1994</option>
+<option value="02 1994">02 1994</option>
+<option value="03 1994">03 1994</option>
+<option value="01 1993">01 1993</option>
+<option value="02 1993">02 1993</option>
+<option value="03 1993">03 1993</option>
+<option value="01 1992">01 1992</option>
+<option value="02 1992">02 1992</option>
+<option value="03 1992">03 1992</option>
+<option value="01 1991">01 1991</option>
+<option value="02 1991">02 1991</option>
+<option value="03 1991">03 1991</option>
+<option value="01 1990">01 1990</option>
+<option value="02 1990">02 1990</option>
+<option value="03 1990">03 1990</option>
+<option value="01 1989">01 1989</option>
+<option value="02 1989">02 1989</option>
+<option value="03 1989">03 1989</option>
+<option value="01 1988">01 1988</option>
+<option value="02 1988">02 1988</option>
+<option value="03 1988">03 1988</option>
+<option value="01 1987">01 1987</option>
+<option value="02 1987">02 1987</option>
+<option value="03 1987">03 1987</option>
+<option value="01 1986">01 1986</option>
+<option value="02 1986">02 1986</option>
+<option value="03 1986">03 1986</option>
+</select>
+                    </form>
+            </li>
+        </ul>
+        
+    <ul class="nav navbar-nav">
+                    <li class="nav-item">
+                <a class="nav-link" href="/EstudiantesPlus/UTL/DescargarManual/271403">
+                    <i class="fas fa-file-pdf"></i>&nbsp;Manual
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalFAQ">
+                    <i class="fas fa-question"></i>&nbsp;FAQ
+                </a>
+            </li>
+    </ul>
+    </div>
+</nav>
+
+<div class="modal fade" id="modalFAQ" tabindex="-1" role="dialog" aria-labelledby="modalFAQLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFAQLabel">Preguntas Frecuentes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+<div class="m-2">
+        <div class="d-flex flex-row flex-row-info">
+            <div class="p-2 flex-row-info-box">
+                <i class="fas fa-info-circle fa-2x"></i>
+            </div>
+            <div class="pt-3 px-3">
+                <p>Antes de crear un ticket se le recomienda que consulte las preguntas frecuentes. </p>
+            </div>
+        </div>
+        <div class="p-3">
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Que puedo reportar en los tickets?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1" class="accordion-collapse collapse " aria-labelledby="1">
+                            <div class="accordion-body">
+
+                                <p>Estos tickets llegan al Departamento de Sistemas Informáticos, por tal motivo, en este apartado solo debes reportar fallas de funcionamiento del portal de Estudiantes.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-2" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Problemas con Teams y Office 365
+                            </button>
+                        </h2>
+                        <div id="collapseOne-2" class="accordion-collapse collapse " aria-labelledby="2">
+                            <div class="accordion-body">
+
+                                <p>Envía un correo con tu problema al Persona de soporte 1 correo@ejemplo.invalid o Persona de soporte 2 correo@ejemplo.invalid, ellos son los encargados de dichos servicios.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-3" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Problemas con el Aula Virtual
+                            </button>
+                        </h2>
+                        <div id="collapseOne-3" class="accordion-collapse collapse " aria-labelledby="3">
+                            <div class="accordion-body">
+
+                                <p>Envía un correo a los encargados de soporte técnico: correo@ejemplo.invalid o correo@ejemplo.invalid</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-4" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Qué hago si no hay fecha de retiro?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-4" class="accordion-collapse collapse " aria-labelledby="4">
+                            <div class="accordion-body">
+
+                                <p>Debes comunicarte con correo@ejemplo.invalid para que te activen la fecha de retiro.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="6">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-6" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Cómo realizo un retiro total?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-6" class="accordion-collapse collapse " aria-labelledby="6">
+                            <div class="accordion-body">
+
+                                <p>Debes de retirar todas las materias del ciclo y el sistema automáticamente te registrara el retiro total</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="7">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-7" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Qué hago si no me salen las asignaturas ofertadas para inscribir?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-7" class="accordion-collapse collapse " aria-labelledby="7">
+                            <div class="accordion-body">
+
+                                <p>Comunicarse con <strong>correo@ejemplo.invalid</strong> para que le realicen la asesoría y pueda ver las asignaturas a impartirse en el ciclo.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="8">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-8" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Qué pasa si no aparecen mis notas?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-8" class="accordion-collapse collapse " aria-labelledby="8">
+                            <div class="accordion-body">
+
+                                <p>Primero debes consultar con tu Docente, si ya subió las notas al portal.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="9">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-9" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Como puedo ver los pagos que he realizado
+                            </button>
+                        </h2>
+                        <div id="collapseOne-9" class="accordion-collapse collapse " aria-labelledby="9">
+                            <div class="accordion-body">
+
+                                <p>En la pestaña de "Comprobantes" podrás ver todos los pagos efectuados desde que eres estudiantes de la Universidad.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="10">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-10" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Que significa ciclo par, impar y continuo
+                            </button>
+                        </h2>
+                        <div id="collapseOne-10" class="accordion-collapse collapse " aria-labelledby="10">
+                            <div class="accordion-body">
+
+                                <p>Todos los módulos o materias, están programados para impartirse en ciclos específicos, por lo cual es importante saber si en el ciclo que estoy se impartirá dicho módulo o materia.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="11">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-11" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Con que tipo de tarjeta puedo efectuar el pago?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-11" class="accordion-collapse collapse " aria-labelledby="11">
+                            <div class="accordion-body">
+
+                                <p>Puede realizar los pagos con sus tarjetas de Débito y Crédito de VISA y MasterCard.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="12">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-12" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Dónde puedo efectuar el pago?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-12" class="accordion-collapse collapse " aria-labelledby="12">
+                            <div class="accordion-body">
+
+                                <ul>
+<li>En los medios electrónicos como la aplicación del Banco Agrícola o el POS Virtual de la Universidad Don Bosco.</li>
+<li>Pagos por medio de las agencias del Banco Agrícola o en colecturía en las instalaciones de la Universidad Don Bosco.</li>
+</ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="13">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-13" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Cómo puedo generar mi Hoja de vida?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-13" class="accordion-collapse collapse " aria-labelledby="13">
+                            <div class="accordion-body">
+
+                                <p>Después de ingresar toda la información solicitada en las opciones de la parte inferior, debe dar clic en la opción "Generar", seleccione el diseño que sea de su agrado y clic en el icono "Ver"; se muestra una ventana donde puede guardar o enviar a imprimir el documento.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="14">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-14" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Cuándo debo actualizar mi información?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-14" class="accordion-collapse collapse " aria-labelledby="14">
+                            <div class="accordion-body">
+
+                                <p>Cuando considere conveniente. La universidad sugiere que la información sea reciente y veraz; ya que en cualquier momento se necesite contactar al estudiante o personas responsables.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="15">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-15" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Por qué no se muestran algunas asignaturas en el calendario?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-15" class="accordion-collapse collapse " aria-labelledby="15">
+                            <div class="accordion-body">
+
+                                <p>Cuando las asignaturas no tienen grupos creados o se impartirá en modalidad Virtual.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="16">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-16" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Puedo apelar la cuota si ya tengo la mínima?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-16" class="accordion-collapse collapse " aria-labelledby="16">
+                            <div class="accordion-body">
+
+                                <p>Una vez tienes la cuota mínima el sistema ya no te permite realizar apelaciones</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="17">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-17" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                ¿Cuándo debe realizar la solicitud de cuarta matricula?
+                            </button>
+                        </h2>
+                        <div id="collapseOne-17" class="accordion-collapse collapse " aria-labelledby="17">
+                            <div class="accordion-body">
+
+                                <p>Debe realizarse en el ciclo que se llevara la materia, pues la autorización solo es validad para el ciclo que se solicita.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="18">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-18" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Necesito mayor información sobre el proceso para nuevo ingreso
+                            </button>
+                        </h2>
+                        <div id="collapseOne-18" class="accordion-collapse collapse " aria-labelledby="18">
+                            <div class="accordion-body">
+
+                                <p>Puedes llamar al <strong>0000-0000</strong> o enviar un correo a <strong>correo@ejemplo.invalid</strong></p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="19">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-19" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                Consultas sobre pagos, canales electrónicos y consultas de tipo financiero.
+                            </button>
+                        </h2>
+                        <div id="collapseOne-19" class="accordion-collapse collapse " aria-labelledby="19">
+                            <div class="accordion-body">
+
+                                <p>Puedes realizar tus consulta al correo <strong>correo@ejemplo.invalid</strong> o al <strong>0000-0000</strong> / <strong>0000-0000</strong></p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="47">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-47" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-47" class="accordion-collapse collapse " aria-labelledby="47">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="139">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-139" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-139" class="accordion-collapse collapse " aria-labelledby="139">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="305">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-305" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-305" class="accordion-collapse collapse " aria-labelledby="305">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="306">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-306" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-306" class="accordion-collapse collapse " aria-labelledby="306">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="308">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-308" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-308" class="accordion-collapse collapse " aria-labelledby="308">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="325">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-325" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-325" class="accordion-collapse collapse " aria-labelledby="325">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="326">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-326" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-326" class="accordion-collapse collapse " aria-labelledby="326">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="394">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-394" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-394" class="accordion-collapse collapse " aria-labelledby="394">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="473">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-473" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-473" class="accordion-collapse collapse " aria-labelledby="473">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1136">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1136" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1136" class="accordion-collapse collapse " aria-labelledby="1136">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1139">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1139" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1139" class="accordion-collapse collapse " aria-labelledby="1139">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1159">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1159" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1159" class="accordion-collapse collapse " aria-labelledby="1159">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1160">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1160" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1160" class="accordion-collapse collapse " aria-labelledby="1160">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1161">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1161" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1161" class="accordion-collapse collapse " aria-labelledby="1161">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1162">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1162" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1162" class="accordion-collapse collapse " aria-labelledby="1162">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1163">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1163" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1163" class="accordion-collapse collapse " aria-labelledby="1163">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1164">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1164" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1164" class="accordion-collapse collapse " aria-labelledby="1164">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shadow-lg mb-3 bg-white rounded" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="1165">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-1165" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                
+                            </button>
+                        </h2>
+                        <div id="collapseOne-1165" class="accordion-collapse collapse " aria-labelledby="1165">
+                            <div class="accordion-body">
+
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+</div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-cancelar-udb" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="divNotasFinales">
+            <div class="card card-udb mb-3">
+        <div class="card-header">
+            <h4>Módulos inscritos</h4>
+        </div>
+        <table class="table table-udb table-bordered table-hover">
+            <thead>
+                <tr class="text-center">
+                    <th>Código</th>
+                    <th>Asignatura</th>
+                    <th>Mat.</th>
+                    <th>NF</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                    <tr data-codigo="CVV501">
+                        <td class="text-center">CVV501</td>
+                        <td>Cálculo de Varias Variables</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">
+                                <button onclick="Ver('CVV501',1,'022026', 1)" class="btn btn-link btn-sm pt-0">
+                                    1.9
+                                </button>
+                        </td>
+                        <td class="text-center">Retirada</td>
+                    </tr>
+                    <tr data-codigo="DMD104">
+                        <td class="text-center">DMD104</td>
+                        <td>Datawarehouse y Minería de Datos</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">
+                                <button onclick="Ver('DMD104',1,'022026', 1)" class="btn btn-link btn-sm pt-0">
+                                    6.3
+                                </button>
+                        </td>
+                        <td class="text-center">Aprobado</td>
+                    </tr>
+                    <tr data-codigo="ESA501">
+                        <td class="text-center">ESA501</td>
+                        <td>Estadística Aplicada</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">
+                                <button onclick="Ver('ESA501',1,'022026', 1)" class="btn btn-link btn-sm pt-0">
+                                    2.9
+                                </button>
+                        </td>
+                        <td class="text-center">Reprobado</td>
+                    </tr>
+                    <tr data-codigo="IRD101">
+                        <td class="text-center">IRD101</td>
+                        <td>Interconexión de Redes de Datos</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">
+                                <button onclick="Ver('IRD101',1,'022026', 1)" class="btn btn-link btn-sm pt-0">
+                                    2.0
+                                </button>
+                        </td>
+                        <td class="text-center">Reprobado</td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+
+    </div>
+
+<div id="divNotasAsignatura">    <div class="card card-udb mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-lg-10">
+                    <small>Detalle módulo:</small>
+                    <h3>Datawarehouse y Minería de Datos</h3>
+                </div>
+                <div class="col-lg-2 text-end">
+                    <small>Nota final:</small>
+                    <h3>6.3</h3>
+                </div>
+            </div>
+        </div>
+                <div class="row" id="divCompetencias">
+                    <div class="col-lg-12">
+                        <table class="table table-udb table-bordered table-responsive">
+                            <thead>
+                                <tr>
+                                    <th width="64%">Actividad</th>
+                                    <th width="12%">Calificación</th>
+                                    <th width="12%">Porcentaje</th>
+                                    <th width="12%">Nota Global</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <td>Investigación documental 1</td>
+                                        <td class="text-center">10.00</td>
+                                        <td class="text-center">9.00 %</td>
+                                        <td class="text-center">0.90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Desafío práctico 1</td>
+                                        <td class="text-center">9.40</td>
+                                        <td class="text-center">10.00 %</td>
+                                        <td class="text-center">0.94</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Evaluación de proyecto primera fase</td>
+                                        <td class="text-center">9.75</td>
+                                        <td class="text-center">7.00 %</td>
+                                        <td class="text-center">0.68</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Investigación documental 2</td>
+                                        <td class="text-center">10.00</td>
+                                        <td class="text-center">10.00 %</td>
+                                        <td class="text-center">1.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Guía de ejercicios prácticos</td>
+                                        <td class="text-center">0.00</td>
+                                        <td class="text-center">8.00 %</td>
+                                        <td class="text-center">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Desafío Practico 2</td>
+                                        <td class="text-center">10.00</td>
+                                        <td class="text-center">13.00 %</td>
+                                        <td class="text-center">1.30</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Defensa de proyecto fase 2</td>
+                                        <td class="text-center">10.00</td>
+                                        <td class="text-center">15.00 %</td>
+                                        <td class="text-center">1.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Desafío práctico 3</td>
+                                        <td class="text-center">0.00</td>
+                                        <td class="text-center">13.00 %</td>
+                                        <td class="text-center">0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Defensa final de proyecto</td>
+                                        <td class="text-center">0.00</td>
+                                        <td class="text-center">15.00 %</td>
+                                        <td class="text-center">0.00</td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </div>
+</div>
+
+ 
+        </div>
+    </main>
+
+    <div class="card" style="background-color: #ebebec">
+        <div class="card-header">
+            <div class="row mb-4 mt-4">
+                <div class="col-lg-2">
+
+                </div>
+                <div class="col-lg-2">
+                    <img src="https://admacad.udb.edu.sv/Recursos/imagenes/UDB_gris_horizontal.png" width="260" height="119" class="img-fluid">
+                </div>
+                <div class="col-lg-2">
+                    <h4>Redes Sociales</h4>
+
+                    <div class="mb-2">
+                        <a href="https://www.facebook.com/UDBelsalvador/" style="text-decoration:none" target="_blank"><i class="fab fa-facebook-square"></i> Facebook</a><br>
+                    </div>
+                    <div class="mb-2">
+                        <a href="https://twitter.com/UDBElsalvador" style="text-decoration:none" target="_blank"><i class="fab fa-twitter-square"></i> Twitter</a><br>
+                    </div>
+                    <div class="mb-2">
+
+                        <a href="https://www.youtube.com/channel/UCO702u8hWJ4608D4Q40CHzA" style="text-decoration:none" class="mb-5" target="_blank"><i class="fab fa-youtube-square"></i> Youtube</a><br>
+                    </div>
+                    <div class="mb-2">
+                        <a href="https://www.instagram.com/udbelsalvador/" style="text-decoration:none" target="_blank"><i class="fab fa-instagram-square"></i> Instagram</a>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <h4>Enlaces de Interes</h4>
+
+                    <div class="mb-2"><a href="http://udb.edu.sv/" style="text-decoration:none" target="_blank"><i class="fas fa-globe"></i> Sitio WEB oficial</a></div>
+                    <div class="mb-2"><a href="https://www.udbvirtual.edu.sv/auladigital/login/index.php" style="text-decoration:none" target="_blank"><i class="fas fa-chalkboard-teacher"></i> Aula Virtual</a></div>
+                    <div class="mb-2"><a href="https://play.google.com/store/apps/details?id=sv.edu.udb.estudiantes&amp;hl=es" style="text-decoration:none" target="_blank"><i class="fas fa-mobile-alt"></i> APP UDB</a></div>
+
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-12"><button type="button" class="btn btn-link btn-link-footer" data-toggle="modal" data-bs-toggle="modal" data-target="#MisionVision" data-bs-target="#MisionVision">Misión y Visión</button></div>
+                    <div class="col-12"><button type="button" class="btn btn-link btn-link-footer" data-toggle="modal" data-bs-toggle="modal" data-target="#PerfProf" data-bs-target="#PerfProf">Perfil Profesional</button></div>
+                    <div class="col-12"><button type="button" class="btn btn-link btn-link-footer" data-toggle="modal" data-bs-toggle="modal" data-target="#ValsUDB" data-bs-target="#ValsUDB">Valores UDB</button></div>
+
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <div class="row mx-0">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+            <img src="https://admacad.udb.edu.sv/Recursos/imagenes/LogosAcreditaciones/Logos2026.png" class="img-fluid">
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+    <div class="container-fluid text-center footer-udb p-4">
+        <h6>
+            © 2008 - 2026
+            Departamento de Sistemas Informáticos
+        </h6>
+        <h6>Universidad Don Bosco</h6>
+        <br>
+    </div>
+
+
+
+
+
+
+    <!--Modal mensaje UTL-->
+    <div class="modal fade text-start" tabindex="-1" role="dialog" id="modalMensajeUTL">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="" id="tipoMensajeUTL" style="min-width: 60%;">
+                <div class="row">
+                    <div class="col-10">
+                        <h5 class="alert-heading mb-0">
+                            <strong>
+                                <label id="cabeceraMensajeUTL">_</label>
+                            </strong>
+                        </h5>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <hr class="mb-2 mt-1">
+                <div class="mt-2" id="textoMensajeUTL">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal mensaje-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalMensaje">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="alert alert-danger" id="tipoMensaje">
+                <div class="row">
+                    <div class="col-10">
+                        <h5 class="alert-heading">
+                            <strong>
+                                <label id="cabeceraMensaje">_</label>
+                            </strong>
+                        </h5>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+                <hr>
+                <p>
+                    <span id="textoMensaje"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal fade" tabindex="-1" id="modalSessionTimeoutWarning">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Advertencia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tu sesión expirara en 5 minutos debido a inactividad.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar-udb" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="modalSessionTimeout">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Advertencia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tu sesión ha expirado.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar-udb" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal sesión duplicada -->
+    <div class="modal fade" id="modalSesion" tabindex="-1" role="dialog" aria-labelledby="modalSesionTitulo" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalSesionTitulo">Sesión duplicada</h5>
+                </div>
+                <div class="modal-body">
+                    Ha iniciado sesión desde otra computadora o navegador. Haz clic en <span class="fw-bold">Usar aquí</span> para seguir usando el portal de estudiantes desde esta ventana.
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-aceptar-udb" id="btnUsarAqui">Usar aquí</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="MisionVision" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Misión y Visión</h5>
+                    <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" data-bs-dismiss="modal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://admacad.udb.edu.sv/Recursos/imagenes/misionvision.jpg" class="img-fluid">
+
+                    <h4>Misión</h4>
+                    <p class="small text-justify">Somos una institución de Educación Superior con carisma salesiano dedicada a la formación integral de la persona humana, por medio de la investigación, la ciencia, la cultura, la tecnología, la innovación y el compromiso con la comunidad para la construcción de una sociedad libre, justa y solidaria.</p>
+                    <h4>Visión</h4>
+                    <p class="small text-justify">Una universidad salesiana, líder a nivel nacional y referente a nivel regional por su modelo educativo; reconocida por la innovación curricular; por el desarrollo profesional y la internacionalización de sus estudiantes, educadores y personal de gestión; por la ejecución de proyectos de investigación, desarrollo e innovación; por sus publicaciones de impacto; por sus programas de grado y postgrado acreditados internacionalmente; por sus programas a distancia únicos e innovadores; por el mejoramiento continuo de la calidad y por la gestión de sus recursos físicos, tecnológicos y financieros para la sostenibilidad de la institución.</p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar-udb" data-dismiss="modal" data-bs-dismiss="modal">Cerrar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="PerfProf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Perfil Profesional</h5>
+                    <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" data-bs-dismiss="modal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <img src="https://admacad.udb.edu.sv/Recursos/imagenes/perfiludb.jpg" class="img-fluid">
+                    <br>
+                    <b>Competencias personales (aprender a ser)</b>
+
+                    <ul class="small text-justify">
+                        <li>Posee una sólida y definida identidad personal: es una persona madura, conciente de su dignidad, del valor y responsabilidad inherentes a su vida, a su naturaleza racional, libre y trascendente.</li>
+                        <li>Tiene un auto concepto equilibrado de sí mismo en todas sus dimensiones: racional, psicológica y emocional; es conciente y de sus limitaciones. Mantiene una visión positiva y optimista de sí mismo, de las demás personas y de la historia."</li>
+                        <li>"Manifiesta apertura de los valores y posee una conciencia ética que le orienta y posibilita la formulación de un proyecto de vida, personal profesional y social.</li>
+                    </ul>
+                    <b>Competencia cognitivas (aprender a aprender)</b>
+                    <ul class="small text-justify">
+                        <li>Manifiesta apertura ala verdad científica, filosófica y religiosa.</li>
+                        <li>Posee una visión global del mundo y de la sociedad en que vive.</li>
+                        <li>Es capaz de ampliar y gestionar cooperativamente sus procesos de aprendizaje y de seguir formándose constantemente durante su vida.</li>
+                        <li>Es crítico, creativo y flexible en el desarrollo de nuevas respuestas a los desafíos que le plantea el ambiente natural y humano.</li>
+                    </ul>
+                    <b>Competencias productivas (aprender a hacer)</b>
+                    <ul class="small text-justify">
+                        <li>Está profesional o técnicamente capacitado en su campo de formación. Posee habilidades básicas especiales y técnicas.</li>
+                        <li>Es capaz de integrar conocimientos teórico y habilidades prácticas, de aplicar la metodología investigativa a la búsqueda de soluciones a los problemas en las áreas de su desempeño laboral y profesional.</li>
+                        <li>Evidencia un espíritu emprendedor, manifiesta capacidad de iniciativa, de planificación y de una gestión de calidad de los procesos humanos y productos. Posee un elevado sentido de trabajo y de la responsabilidad social que de él deriva.</li>
+                    </ul>
+
+                    <b>Competencias sociales (aprender a convivir)</b>
+                    <ul class="small text-justify">
+                        <li>Es capaz de establecer relaciones humanas maduras, de integrarse positivamente a su entorno educativo, laboral o social de trabajo en equipo en torno a proyectos compartidos.</li>
+                        <li>Se muestra socialmente sensible, honesto y solidario frente a la realidad del país, particularmente hacia la condición de los jóvenes más pobres.</li>
+                        <li>Es conciente de sus responsabilidades democráticas, dialoga y participa en la definición y realización del bien común en su comunidad y en la nación.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar-udb" data-dismiss="modal" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+                <hr class="mb-2 mt-1">
+                <div class="mt-2" id="textoMensajeUTL">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ValsUDB" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Valores</h5>
+                    <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" data-bs-dismiss="modal">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://admacad.udb.edu.sv/Recursos/imagenes/valoresudb.jpg" class="img-fluid">
+                    <h6><b>VERDAD</b></h6>
+                    <p class="small text-justify">Es la razón de nuestra labor docente, de investigación y de proyección social, que busca la verdad mediante la rigurosidad cientíca y los valores cristianos.</p>
+                    <h6><b>INTEGRIDAD</b></h6>
+                    <p class=" small text-justify">Promovemos la dignidad de toda persona humana, hombre y mujer, a través de una educación y un estilo de relaciones que garantice la integralidad de su desarrollo personal y social.</p>
+                    <h6><b>SOLIDARIDAD</b></h6>
+                    <p class="small text-justify">Formamos personas que vivan comprometidas con la justicia para hacer una sociedad más solidaria y humana.</p>
+                    <h6><b>ESPIRITUALIDAD</b></h6>
+                    <p class="small text-justify">Compartimos una visión del mundo y de la persona en sintonía con el Evangelio de Cristo.</p>
+                    <h6><b>RAZÓN</b></h6>
+                    <p class="small text-justify">La disponibilidad al diálogo, a la empatía; la educación al sentido crítico, a pensar con libertad, al descubrimiento y adhesión a los valores éticos, a la formación de la conciencia moral, para la construcción de la sociedad.</p>
+                    <h6><b>AMABILIDAD</b></h6>
+                    <p class="small text-justify">Una experiencia comunitaria basada en la presencia cálida y con espíritu de familia.</p>
+                    <h6><b>RESPONSABILIDAD</b></h6>
+                    <p class="small text-justify">Sinergia y adhesión a la propuesta educativo-pastoral de la Universidad, desde la diversidad de la Comunidad Académica, para garantizar el alcance de los resultados mediante el trabajo y la innovación</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancelar-udb" data-dismiss="modal" data-bs-dismiss="modal">Cerrar</button>
+
+                </div>
+                <hr>
+                <p>
+                    <span id="textoMensaje"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: none;" role="status" aria-hidden="true" id="loader">
+
+        <div class="progress-udb">
+            <div>
+                <img src="https://admacad.udb.edu.sv/Recursos/imagenes/DonBosco.gif">
+            </div>
+            <div class="progress-container">
+                <div class="progress-herz">
+                    <div class="progress-bar-udb">
+                        <div class="progress-shadow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNotificaciones" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-notificaciones" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title">Notificaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="btn-group" role="group" style="width: 200px">
+                    <button id="btnNotificacionRecibido" type="button" class="btn btn-eliminar-udb" onclick="activiarTab(1)">Recibidos</button>
+                    <button id="btnNotificacionPendiente" type="button" class="btn btn-outline-warning" onclick="activiarTab(2)">Pendientes</button>
+                </div>
+                <div class="table-responsive" id="tRecibidos">
+                    <div id="tNotificacionesRM_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer"><div class="row"><div class="col-sm-12"><table id="tNotificacionesRM" class="table table-udb table-bordered dataTable no-footer" role="grid" aria-describedby="tNotificacionesRM_info">
+                        <thead>
+                            <tr role="row"><th style="width: 150px" class="sorting_disabled" rowspan="1" colspan="1">Fecha</th><th style="width: 100px" class="sorting_disabled" rowspan="1" colspan="1">ID</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tipo</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Mensaje</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Titular</th><th style="width: 150px" align="center" class="sorting_disabled" rowspan="1" colspan="1">Estado</th><th style="width: 50px" align="center" class="sorting_disabled" rowspan="1" colspan="1">Opciones</th></tr>
+                        </thead>
+                        <tbody id="tBodyR"><tr class="odd"><td valign="top" colspan="7" class="dataTables_empty">No hay información</td></tr></tbody>
+                    </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="tNotificacionesRM_info" role="status" aria-live="polite">Mostrando 0 a 0 de 0 Entradas</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="tNotificacionesRM_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="tNotificacionesRM_previous"><a href="#" aria-controls="tNotificacionesRM" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a></li><li class="paginate_button page-item next disabled" id="tNotificacionesRM_next"><a href="#" aria-controls="tNotificacionesRM" data-dt-idx="1" tabindex="0" class="page-link">Siguiente</a></li></ul></div></div></div></div>
+                </div>
+                <div class="table-responsive" id="tPendientes" style="display: none;">
+                    <div id="tNotificacionesPM_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer"><div class="row"><div class="col-sm-12"><table id="tNotificacionesPM" class="table table-udb table-bordered dataTable no-footer" role="grid" aria-describedby="tNotificacionesPM_info">
+                        <thead>
+                            <tr role="row"><th style="width: 150px" class="sorting_disabled" rowspan="1" colspan="1">Fecha</th><th style="width: 100px" class="sorting_disabled" rowspan="1" colspan="1">ID</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tipo</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Mensaje</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Titular</th><th style="width: 150px" align="center" class="sorting_disabled" rowspan="1" colspan="1">Estado</th><th style="width: 50px" align="center" class="sorting_disabled" rowspan="1" colspan="1">Opciones</th></tr>
+                        </thead>
+                        <tbody id="tBodyP"><tr class="odd"><td valign="top" colspan="7" class="dataTables_empty">No hay información</td></tr></tbody>
+                    </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="tNotificacionesPM_info" role="status" aria-live="polite">Mostrando 0 a 0 de 0 Entradas</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="tNotificacionesPM_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="tNotificacionesPM_previous"><a href="#" aria-controls="tNotificacionesPM" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a></li><li class="paginate_button page-item next disabled" id="tNotificacionesPM_next"><a href="#" aria-controls="tNotificacionesPM" data-dt-idx="1" tabindex="0" class="page-link">Siguiente</a></li></ul></div></div></div></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/EstudiantesPlus/FLWNotificaciones" class="btn btn-aceptar-udb">Ver todas</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+<form action="/EstudiantesPlus/Notas" id="__AjaxAntiForgeryForm" method="post"><input name="__RequestVerificationToken" type="hidden" value="REDACTED"></form>
+
+
+    
+
+<div class="offcanvas offcanvas-end" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalConfirmarEliminarCarrito" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarEliminarCarritoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalConfirmarEliminarCarritoLabel">Eliminar Item Carrito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input id="idItemCarrito" name="id" type="hidden" value="-1">
+                <div class="text-center">
+                    ¿Está seguro que desea eliminar el item seleccionado?
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="submit" class="btn btn-aceptar-udb" id="BTNEliminarItemCarrito">Aceptar</button>
+                <button type="button" class="btn btn-cancelar-udb" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script src="https://admacad.udb.edu.sv/Recursos/js/init.js" type="text/javascript"></script>
+    <div class="modal fade" id="modalExtenderSesion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" arialabelledby="modalExtenderSesionLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title"><b>Advertencia</b></h5>
+                    <href type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></href>
+                </div>
+                <div class="modal-body">
+                    Su sesión expirara en: <b id="session_countdown"></b>
+                    <br>
+                    ¿Desea extender la sesión?
+                </div>
+                <div class="modal-footer">
+                    <button id="BTNExtenderAuth" type="button" class="btn btn-aceptar-udb">Extender Sesión</button>
+                    <button type="button" class="btn btn-cancelar-udb" data-bs-dismiss="modal">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://admacad.udb.edu.sv/Recursos/js/Nuevo.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        
+        const IrPrograma = (url, data, back = '') => {
+            if (data == 56) url += 'Auth/StartIndex';
+            LPeticionNueva({
+                url: 'https://admacad.udb.edu.sv/APILogin/api/AUth/CodeSI',
+                data: {
+                    IdSesion: DGeneral.idsesion.toString(),
+                    url: url,
+                    IdPrograma: data.toString()
+                },
+                manejador: (result) => {
+                    if (result.success)
+                        window.location.href = result.data + (data == 56 ? '&back=' + back : '');
+                }
+            });
+        }
+
+        const Onlogout = () => {
+            LPeticionNueva({
+                url: 'https://admacad.udb.edu.sv/APILogin/api/AUth/Logout',
+                data: {
+                    IdSesion: DGeneral.idsesion.toString()
+                },
+                manejador: (result) => {
+                    window.location.href = 'https://admacad.udb.edu.sv/PortalWeb/';
+                }
+            });
+        }
+
+        const LPeticionNueva = async ({ url, data, metodo = 'POST', manejador }) => {
+            try {
+                const myHeaders = new Headers();
+                myHeaders.append('Content-Type', 'application/json; charset=utf-8');
+
+                const response = await fetch(url, {
+                    method: metodo,
+                    body: JSON.stringify(data),
+                    headers: myHeaders
+                });
+
+                if (!response.ok) throw new Error('No se pudo realizar la petición');
+                manejador(await response.json());
+            } catch (err) {
+                console.log(err);
+            }
+        };
+         const DGeneral = {
+             idsesion: 1829016,
+         }
+
+         SessionTimer.Init({
+             idSesion: DGeneral.idsesion,
+             segundosRestantes: 1796,
+             warningTimeOut: 60,
+             urlValidar: 'https://admacad.udb.edu.sv/APILogin/api/AUth/WarningTime',
+             urlExtender: 'https://admacad.udb.edu.sv/APILogin/api/AUth/ExtenderSesion'
+         });
+         document.querySelectorAll('#modalExtenderSesion [data-bs-dismiss="modal"]').forEach(x => x.addEventListener('click', () => Onlogout()));
+         document
+         .getElementById("BTNExtenderAuth")
+         .addEventListener("click", () => {
+             SessionTimer.ExtenderSesion();
+         });
+
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#footer-udb-logos').load('https://admacad.udb.edu.sv/Recursos/html/footer-login.html');
+            $(".chosen-select").chosen({ width: '100%', no_results_text: "No se encontraron resultados!", placeholder_text_multiple: "Seleccione al menos una opción" });
+            $(".chosen-select-modal").chosen({
+                width: '100%',
+                no_results_text: 'No se encontraron resultados!',
+                placeholder_text_multiple: "Seleccione al menos una opción"
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        const getToken = async () => {
+            var form = $('#__AjaxAntiForgeryForm');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+            return token;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+    const mConfirmarEliminarCarrito = document.getElementById('modalConfirmarEliminarCarrito');
+    let ModalConfirmarEliminarCarrito = null;
+    var eliminarItemCarritoAfter = async function (objeto) { }; //Metodo dinamico que se dispara tras eliminar un item del carrito
+
+    if (mConfirmarEliminarCarrito) {
+        ModalConfirmarEliminarCarrito = new bootstrap.Modal(mConfirmarEliminarCarrito);
+    }
+
+    /*Eventos */    
+    const myOffcanvas = document.getElementById('offcanvasCarrito')
+    myOffcanvas.addEventListener('show.bs.offcanvas', function () {
+        procesoMostrarDetalleCarrito();
+    })
+
+    const myModalEl = document.getElementById('modalConfirmarEliminarCarrito')
+    myModalEl.addEventListener('hidden.bs.modal', function (event) {
+        setTimeout(function () {
+            var myOffcanvas = document.getElementById('offcanvasCarrito');
+            var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
+            bsOffcanvas.show();
+        }, 100);
+    })
+
+    $("#BTNEliminarItemCarrito").click(function () {
+        const id = $("#idItemCarrito").val();
+        procesoEliminarItemCarrito(id);
+        ModalConfirmarEliminarCarrito.hide();
+    });
+
+    /*Metodos*/
+
+    const eliminarItemCarrito = async (id, eliminarSinConfirmar) => {
+        $("#loader").show();
+        if (eliminarSinConfirmar == true) {
+            var result = await procesoEliminarItemCarrito(id);
+            console.log(result);
+        } else {
+            $("#idItemCarrito").val(id);
+            ModalConfirmarEliminarCarrito.show();
+        }
+        $("#loader").hide();
+    }
+
+    //const metodoEliminarItemCarrito = async (id) => {
+    //    return await procesoEliminarItemCarrito(id);
+    //}
+
+    /*Proceso */
+    const procesoMostrarCantidadCarrito = async () => {
+        const objeto = await peticionCargarCantidadCarrito();
+        const carga = await cargarCantidadCarrito(objeto);
+        return carga;
+    }
+
+    const procesoMostrarDetalleCarrito = async () => {
+        const html = '<div class="d-flex justify-content-center mt-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div></div><br/><h4 class="text-center text-primary">Cargando...</h4>';
+        $("#offcanvasCarrito").html(html);
+        const objeto = await peticionCargarDetalleCarrito();
+        const carga = await cargarDetalleCarrito(objeto);
+        return carga;
+    }
+
+    const procesoEliminarItemCarrito = async (id) => {
+        const objeto = await peticionEliminarItemCarrito(id);
+        const carga = await cargarEliminarItemCarrito(objeto);
+        await eliminarItemCarritoAfter(objeto);
+        return carga;
+    }
+
+    /*Peticiones */
+    const peticionCargarCantidadCarrito = async () => {
+        //obtentemos los datos
+        const url = '/EstudiantesPlus/Carrito/ListarCantidadEnCarrito';
+        const token = await getToken();
+        //realizamos las peticiones
+        const obj = await AJAXP({ URL: url, TYPE: 'POST', token: token });
+        return obj;
+    }
+
+    const peticionCargarDetalleCarrito = async () => {
+        //obtentemos los datos
+        const url = '/EstudiantesPlus/Carrito/Listar';
+        const token = await getToken();
+        //realizamos las peticiones
+        const obj = await AJAXP({ URL: url, TYPE: 'POST', token: token });
+        return obj;
+    }
+
+    const peticionEliminarItemCarrito = async (id) => {
+        //obtentemos los datos
+        const url = '/EstudiantesPlus/Carrito/Eliminar';
+        const data = JSON.stringify({ 'id': id });
+        const token = await getToken();
+        //realizamos las peticiones
+        const obj = await AJAXP({ URL: url, DATA: data, TYPE: 'POST', token: token });
+        return obj;
+    }
+
+    /*Carga */
+    const cargarCantidadCarrito = async (response) => {
+        const { success, mensaje, cantidad } = response;
+        if (success === true) {
+            if (cantidad === "-1" || cantidad === "0") {
+                $("#tbCantCarrito").html('');
+            } else {
+                $("#tbCantCarrito").html(cantidad);
+            }
+        } else {
+            $("#tbCantCarrito").html('');
+            console.log(mensaje.Mensaje);
+        }
+    }
+
+    const cargarDetalleCarrito = async (response) => {
+        const { success, mensaje, view } = response;
+        if (success === true) {
+            $("#offcanvasCarrito").html(view);
+        } else {
+            $("#offcanvasCarrito").html('');
+            console.log(mensaje.Mensaje);
+        }
+    }
+
+    const cargarEliminarItemCarrito = async (response) => {
+        const { success, mensaje, total, cantidad, listaIds, lista } = response;
+        if (success === true) {
+            //Quito todos los pagos eliminados
+            listaIds.forEach(element => $("#" + element).remove());
+            lista.forEach(element => cambiarEnlace(element));
+
+            //Actualizo el monto
+            $("#lbTotalCarrito").html('Total: $' + total.toFixed(2));
+
+            if (total <= 0) {
+                $("#offCanvasHeaderCarrito1").html('');
+                $("#offCanvasHeaderCarrito2").html('');
+                $('#offCanvasBodyCarrito').html('<div class="alert alert-info"><h4>Tu carrito esta vacío.</h4><h6>Aún no se han agregado servicios y/o mensualidades al carrito de pagos.</h6></div>');
+            }
+
+            //Actualizo el total del carrito de pagos
+            if (cantidad === "-1" || cantidad === "0") {
+                $("#tbCantCarrito").html('');
+            } else {
+                $("#tbCantCarrito").html(cantidad);
+            }
+
+            //Verifica en que vista se tiene que realizar la recarga de registros
+            if (VistaCarritoEstudiantePlus == "Pagos") {
+                //Vista de Pagos [VENPagos]
+                await ListarPagos();
+                return true;
+            } else if (VistaCarritoEstudiantePlus == "Retiro") {
+                //Vista de Retiro de Asignaturas [RETRetiroAsignatura]
+                await ListarSolicitudes();
+                return true;
+            }
+        } else {            
+            console.log(mensaje.Mensaje);
+            return false;
+        }
+    }
+
+    const cambiarEnlace = (objeto) => {
+        const funcion = 'eliminarItemCarrito(' + objeto.Id + ', ' + objeto.EliminarSinConfirmar + ')';
+        $("#" + objeto.Id).find('a').first().removeAttr('onclick').attr('onclick', funcion);
+    }
+
+</script>
+
+
+
+    <script type="text/javascript" charset="utf-8">
+
+        window.onload = function () {
+            var urlBase = '/EstudiantesPlus/';
+            var urlNotificaciones = '/EstudiantesPlus/FLWNotificaciones/Badges';
+            var urlNotificacionesNoVistas = '/EstudiantesPlus/FLWNotificaciones/ListarNoVistas';
+            var urlNotificacionesNoEjecutadas = '/EstudiantesPlus/FLWNotificaciones/ListarNoEjecutadas';
+            inicializar(urlBase, urlNotificaciones, urlNotificacionesNoVistas, urlNotificacionesNoEjecutadas);
+            cargarMensajeInicial();
+            procesoMostrarCantidadCarrito();
+        }
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        function cargarMensajeInicial() {
+
+
+
+
+        }
+    </script>
+
+    
+    <script type="text/javascript">
+
+    let _lbUV = document.getElementById('LBUVInscritas');
+    let _dvNF = document.getElementById('divNotasFinales');
+    let _dvNA = document.getElementById('divNotasAsignatura');
+
+    $("#DDLModulo").on("change", () => {
+        const modulo = $("#DDLModulo").val();
+        ActualizarNotas(modulo);
+    });
+
+    const ActualizarNotas = (modulo) => {
+        $('#loader').show();
+        PeticionNotas(modulo).catch((err) => {
+            $("#loader").hide();
+            mostrarMensajeUTL({ Mensaje: err, TipoMensaje: 200101 });
+        });
+    }
+
+    const PeticionNotas = async (modulo) => {
+        const route = '/EstudiantesPlus/Notas/Ver';
+        const token = await getToken();
+        const DATA = JSON.stringify({
+            'modulo': modulo
+        });
+
+        const response = await AJAXP({
+            URL: route,
+            DATA: DATA,
+            TYPE: 'POST',
+            token: token
+        });
+
+        return await CargarNotas(response);
+    }
+
+    const CargarNotas = async (response) => {
+        $("#loader").hide();
+
+        _dvNF ? _dvNF.innerHTML = "" : false;
+        _dvNA ? _dvNA.innerHTML = "" : false;
+
+        if (response.success === true) {
+            const { viewNotasFinales, UVInscritas } = response;
+
+            _dvNF ? _dvNF.innerHTML = viewNotasFinales : false;
+            _lbUV ? _lbUV.innerHTML = UVInscritas : false;
+
+        } else {            
+            mostrarMensajeUTL(response.mensaje);
+        }
+    }
+
+    const Ver = async (codigo, competencia, modulo, campus) => {
+        $('#loader').show();
+        PeticionDetalle(codigo, competencia, modulo, campus).catch((err) => {
+            $("#loader").hide();
+            mostrarMensajeUTL({ Mensaje: err, TipoMensaje: 200101 });
+        });
+    }
+
+    const PeticionDetalle = async (codigo, competencia, modulo, campus) => {
+        const route = '/EstudiantesPlus/Notas/Detalle';
+        const token = await getToken();
+
+        const DATA = JSON.stringify({
+            'codigo': codigo,
+            'competencia': competencia,
+            'modulo': modulo,
+            'campus': campus
+        });
+
+        const response = await AJAXP({
+            URL: route,
+            DATA: DATA,
+            TYPE: 'POST',
+            token: token
+        });
+
+        return await CargarDetalle(response);
+    }
+
+    const CargarDetalle = async (response) => {
+        $("#loader").hide();
+        if (response.success === true) {
+            const { viewNotasAsignatura } = response;
+            _dvNA ? _dvNA.innerHTML = viewNotasAsignatura : false;
+        } else {
+            _dvNA ? _dvNA.innerHTML = "" : false;
+            mostrarMensajeUTL(response.mensaje);
+        }
+    }
+
+    const Evaluaciones = async (periodo, tipo, codigo, modulo) => {
+        $('#loader').show();
+        PeticionEvaluaciones(periodo, tipo, codigo, modulo).catch((err) => {
+            $("#loader").hide();
+            mostrarMensajeUTL({ Mensaje: err, TipoMensaje: 200101 });
+        });
+    }
+
+    const PeticionEvaluaciones = async (periodo, tipo, codigo, modulo) => {
+        const route = '/EstudiantesPlus/Notas/Evaluaciones';
+        const token = await getToken();
+
+        const DATA = JSON.stringify({
+            'periodo': periodo,
+            'tipo': tipo,
+            'codigo': codigo,            
+            'modulo': modulo
+        });
+
+        const response = await AJAXP({
+            URL: route,
+            DATA: DATA,
+            TYPE: 'POST',
+            token: token
+        });
+
+        return await CargarEvaluaciones(response);
+    }
+
+    const CargarEvaluaciones = async (response) => {
+        $("#loader").hide();
+        let _dvDO = document.getElementById('divDetalleObjetivo');
+        if (response.success === true) {
+            const { viewEvaluaciones } = response;
+            _dvDO ? _dvDO.innerHTML = viewEvaluaciones : false;
+        } else {
+            _dvDO ? _dvDO.innerHTML = "" : false;
+            mostrarMensajeUTL(response.mensaje);
+        }
+    }
+</script>
+;
+
+
+    <script type="text/javascript">
+        inicializarPopoverBS5();
+        inicializarTooltipBS5();
+
+        $(document).on('click', 'button[data-bs-toggle="tooltip"], a[data-bs-toggle="tooltip"]', function () {
+            $(this).blur();
+            $(this).tooltip('hide');
+        });
+    </script>
+
+
+</body></html>
