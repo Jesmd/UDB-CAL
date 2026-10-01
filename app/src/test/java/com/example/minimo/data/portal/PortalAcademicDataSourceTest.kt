@@ -14,6 +14,8 @@ class PortalAcademicDataSourceTest {
      */
     private class FakeBrowser(
         val finalUrl: String? = PortalUrls.NOTAS_URL,
+        /** Where later loads end (e.g. the login page once the session expired). */
+        val laterUrl: String? = finalUrl,
         val page: String = Fixtures.notasSinDetalle,
         val details: Map<String, String> = mapOf(
             "DMD104" to Fixtures.detalleDmd104,
@@ -31,7 +33,7 @@ class PortalAcademicDataSourceTest {
 
         override suspend fun load(url: String): String? {
             loads += url
-            return finalUrl
+            return if (loads.size == 1) finalUrl else laterUrl
         }
 
         override suspend fun evaluate(script: String): String {
@@ -93,6 +95,21 @@ class PortalAcademicDataSourceTest {
         val browser = FakeBrowser(details = mapOf("DMD104" to ""))
         val error = runCatching { PortalAcademicDataSource(browser).fetchCourses() }.exceptionOrNull()
         assertEquals("DMD104", (error as PortalException.DetailFailed).moduleCode)
+    }
+
+    @Test
+    fun aDetailThatFailsBecauseTheSessionExpiredAsksToLogIn() = runTest {
+        val browser = FakeBrowser(details = mapOf("DMD104" to ""), laterUrl = PortalUrls.LOGIN_URL)
+        val error = runCatching { PortalAcademicDataSource(browser).fetchCourses() }.exceptionOrNull()
+        assertTrue(error is PortalException.NotLoggedIn)
+        assertEquals(listOf(PortalUrls.NOTAS_URL, PortalUrls.NOTAS_URL), browser.loads)
+    }
+
+    @Test
+    fun aTimeoutBecauseTheSessionExpiredAsksToLogIn() = runTest {
+        val browser = FakeBrowser(busyPolls = Int.MAX_VALUE, laterUrl = PortalUrls.LOGIN_URL)
+        val error = runCatching { PortalAcademicDataSource(browser, detailTimeoutMillis = 5_000).fetchCourses() }.exceptionOrNull()
+        assertTrue(error is PortalException.NotLoggedIn)
     }
 
     @Test
