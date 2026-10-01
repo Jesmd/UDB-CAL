@@ -3,6 +3,89 @@
     <string name="app_name">Mínimo</string>
     <string name="nav_courses">Materias</string>
     <string name="nav_settings">Ajustes</string>
+
+    <!-- Common -->
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_back">Volver</string>
+    <string name="action_edit">Editar</string>
+    <string name="loading">Cargando…</string>
+    <string name="storage_read_error">No se pudieron leer los datos guardados. Tus datos no se modificaron.</string>
+    <string name="storage_save_error">No se pudieron guardar los cambios.</string>
+
+    <!-- Courses list -->
+    <string name="courses_title">Materias</string>
     <string name="courses_empty_title">Aún no hay materias</string>
-    <string name="settings_empty">Sin opciones por ahora.</string>
+    <string name="courses_empty_hint">Agrega tu primera materia con el botón +.</string>
+    <string name="courses_add">Agregar materia</string>
+    <string name="courses_no_evaluations">Sin evaluaciones</string>
+    <string name="courses_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
+
+    <!-- Course editor -->
+    <string name="course_new_title">Nueva materia</string>
+    <string name="course_edit_title">Editar materia</string>
+    <string name="course_name_label">Nombre</string>
+    <string name="course_code_label">Código (opcional)</string>
+    <string name="course_name_required">Escribe el nombre de la materia.</string>
+    <string name="course_delete_title">¿Eliminar materia?</string>
+    <string name="course_delete_message">Se eliminarán «%1$s» y todas sus evaluaciones. Esta acción no se puede deshacer.</string>
+
+    <!-- Course detail -->
+    <string name="detail_not_found">Esta materia ya no existe.</string>
+    <string name="detail_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
+    <string name="weights_sum_short">Los porcentajes suman %1$s</string>
+    <string name="detail_weights_warning">Los porcentajes suman %1$s, no 100%. El cálculo usa los porcentajes tal como están.</string>
+    <string name="evaluations_title">Evaluaciones</string>
+    <string name="evaluations_add">Agregar</string>
+    <string name="evaluations_empty">Esta materia no tiene evaluaciones. Agrégalas para poder calcular.</string>
+    <string name="evaluations_header_name">Evaluación</string>
+    <string name="evaluations_header_weight">Peso</string>
+    <string name="evaluations_header_grade">Nota</string>
+    <string name="evaluation_pending">Pendiente</string>
+    <string name="goal_title">Meta</string>
+    <string name="goal_value">Meta: %1$s</string>
+    <string name="goal_reset">Usar meta por defecto</string>
+    <string name="goal_default_hint">Meta por defecto (se cambia en Ajustes)</string>
+    <string name="calculate_minimum">Calcular mínimo</string>
+    <string name="target_pass_label">Para aprobar (%1$s)</string>
+    <string name="target_goal_label">Para tu meta (%1$s)</string>
+    <string name="target_line">%1$s: %2$s</string>
+    <string name="outcome_secured">ya está asegurada</string>
+    <string name="outcome_reachable">necesitas %1$s / 10 en lo que falta</string>
+    <string name="outcome_impossible">imposible: necesitarías %1$s / 10</string>
+    <string name="outcome_final_reached">nota final %1$s, alcanzada</string>
+    <string name="outcome_final_not_reached">nota final %1$s, no alcanzada</string>
+    <string name="max_possible">Tu máximo posible: %1$s</string>
+
+    <!-- Simulator -->
+    <string name="simulator_title">¿Qué pasa si saco…?</string>
+    <string name="simulator_label">Promedio en lo pendiente (0 a 10)</string>
+    <string name="simulator_invalid">Escribe un número entre 0 y 10.</string>
+    <string name="simulator_final">Nota final proyectada: %1$s</string>
+    <string name="simulator_passes">Aprobada (mínimo %1$s)</string>
+    <string name="simulator_fails">Reprobada (mínimo %1$s)</string>
+    <string name="simulator_goal_reached">Meta (%1$s): alcanzada</string>
+    <string name="simulator_goal_not_reached">Meta (%1$s): no alcanzada</string>
+
+    <!-- Evaluation editor -->
+    <string name="evaluation_new_title">Nueva evaluación</string>
+    <string name="evaluation_edit_title">Editar evaluación</string>
+    <string name="evaluation_name_label">Nombre</string>
+    <string name="evaluation_name_required">Escribe el nombre de la evaluación.</string>
+    <string name="evaluation_weight_label">Peso (%)</string>
+    <string name="evaluation_weight_invalid">Escribe un porcentaje entre 0 y 100.</string>
+    <string name="evaluation_graded_label">Ya tiene nota</string>
+    <string name="evaluation_grade_label">Nota (0 a 10)</string>
+    <string name="evaluation_grade_invalid">Escribe una nota entre 0 y 10.</string>
+    <string name="evaluation_delete_title">¿Eliminar evaluación?</string>
+    <string name="evaluation_delete_message">Se eliminará «%1$s».</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_pass_mark_label">Nota mínima para aprobar</string>
+    <string name="settings_pass_mark_invalid">Escribe un valor mayor que 0 y hasta 10, con un decimal como máximo.</string>
+    <string name="settings_default_goal_label">Meta por defecto</string>
+    <string name="settings_default_goal_invalid">Escribe un valor entre la nota mínima y 10, con un decimal como máximo.</string>
+    <string name="settings_default_goal_hint">Se aplica a las materias que no tienen una meta propia.</string>
 </resources>
