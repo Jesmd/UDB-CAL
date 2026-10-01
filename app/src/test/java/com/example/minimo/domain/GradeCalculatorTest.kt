@@ -205,4 +205,53 @@ class GradeCalculatorTest {
         assertEquals(d("8.5"), settings.effectiveGoal(d("8.5")))
         assertEquals(d("6.0"), settings.effectiveGoal(d("5.0")))
     }
+
+    // Portal rounding (Settings switch, off by default).
+
+    private fun rounded(evaluations: List<Evaluation>, goal: String = "6.0"): CourseAnalysis.Computed =
+        GradeCalculator.analyze(evaluations, pass, d(goal), roundLikePortal = true) as CourseAnalysis.Computed
+
+    @Test
+    fun portalGradeIsOneDecimalHalfUp() {
+        assertEquals(d("2.0"), analyze(listOf(graded("50", "3.94"), pending("50"))).accumulatedOnPortal) // 1.97
+        assertEquals(d("6.3"), RoundingPolicy.portalGrade(d("6.3225")))
+        assertEquals(d("6.0"), RoundingPolicy.portalGrade(d("5.95")))
+        assertEquals(d("5.9"), RoundingPolicy.portalGrade(d("5.9499")))
+    }
+
+    @Test
+    fun roundingLowersTheMinimumToWhatRoundsUpToTheTarget() {
+        val evals = listOf(graded("30", "5.0"), graded("40", "6.25"), pending("30"))
+        // (5.95 - 4.00) / 0.30 = 6.50, instead of 6.67 with the exact rule.
+        assertEquals(d("6.50"), reachable(rounded(evals).toPass))
+        // Goal 7: (6.95 - 4.00) / 0.30 = 9.8333... -> 9.84; goal 8: 13.17, impossible.
+        assertEquals(d("9.84"), reachable(rounded(evals, "7").toGoal))
+        assertEquals(d("13.17"), impossible(rounded(evals, "8").toGoal).required)
+
+        val strict = GradeCalculator.project(evals, d("6.5"), pass, pass)
+        val withRounding = GradeCalculator.project(evals, d("6.5"), pass, pass, roundLikePortal = true)
+        assertEquals(d("5.95"), strict.finalGrade)
+        assertEquals(d("6.0"), withRounding.finalGradeOnPortal)
+        assertFalse(strict.passes)
+        assertTrue(withRounding.passes)
+    }
+
+    @Test
+    fun roundingDecidesTheBorderCases() {
+        // Final 5.95: fails with the exact rule, passes when it counts as the portal's 6.0.
+        val final595 = listOf(graded("50", "5.9"), graded("50", "6.0"))
+        assertFalse((analyze(final595).toPass as TargetOutcome.NoPending).reached)
+        assertTrue((rounded(final595).toPass as TargetOutcome.NoPending).reached)
+        assertFalse((rounded(listOf(graded("100", "5.94"))).toPass as TargetOutcome.NoPending).reached)
+
+        // A = 5.95 with 30% pending: already secured only when rounding.
+        val secured = listOf(graded("70", "8.5"), pending("30"))
+        assertEquals(d("0.17"), reachable(analyze(secured).toPass))
+        assertTrue(rounded(secured).toPass is TargetOutcome.Secured)
+
+        // A = 2.95, P = 0.30, F_max = 5.95: impossible with the exact rule, needs exactly 10 when rounding.
+        val border = listOf(graded("50", "5.9"), graded("20", "0"), pending("30"))
+        assertEquals(d("10.17"), impossible(analyze(border).toPass).required)
+        assertEquals(d("10.00"), reachable(rounded(border).toPass))
+    }
 }

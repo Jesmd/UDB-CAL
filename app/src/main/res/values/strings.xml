@@ -18,7 +18,7 @@
     <string name="courses_empty_title">Aún no hay materias</string>
     <string name="courses_add">Agregar materia</string>
     <string name="courses_no_evaluations">Sin evaluaciones</string>
-    <string name="courses_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
+    <string name="courses_summary">Acumulado: %1$s / 10 (en el portal: %2$s) · Pendiente: %3$s</string>
 
     <!-- Course editor -->
     <string name="course_new_title">Nueva materia</string>
@@ -31,7 +31,7 @@
 
     <!-- Course detail -->
     <string name="detail_not_found">Esta materia ya no existe.</string>
-    <string name="detail_summary">Acumulado: %1$s / 10 · Pendiente: %2$s</string>
+    <string name="detail_summary">Acumulado: %1$s / 10 (en el portal: %2$s) · Pendiente: %3$s</string>
     <string name="weights_sum_short">Los porcentajes suman %1$s</string>
     <string name="detail_weights_warning">Los porcentajes suman %1$s, no 100%%. El cálculo usa los porcentajes tal como están.</string>
     <string name="evaluations_title">Evaluaciones</string>
@@ -60,7 +60,7 @@
     <string name="simulator_title">¿Qué pasa si saco…?</string>
     <string name="simulator_label">Promedio en lo pendiente (0 a 10)</string>
     <string name="simulator_invalid">Escribe un número entre 0 y 10.</string>
-    <string name="simulator_final">Nota final proyectada: %1$s</string>
+    <string name="simulator_final">Nota final proyectada: %1$s (en el portal: %2$s)</string>
     <string name="simulator_passes">Aprobada (mínimo %1$s)</string>
     <string name="simulator_fails">Reprobada (mínimo %1$s)</string>
     <string name="simulator_goal_reached">Meta (%1$s): alcanzada</string>
@@ -85,6 +85,8 @@
     <string name="settings_pass_mark_invalid">Escribe un valor mayor que 0 y hasta 10, con un decimal como máximo.</string>
     <string name="settings_default_goal_label">Meta por defecto</string>
     <string name="settings_default_goal_invalid">Escribe un valor entre la nota mínima y 10, con un decimal como máximo.</string>
+    <string name="settings_round_title">Contar el redondeo del portal para aprobar</string>
+    <string name="settings_round_hint">El portal muestra la nota con un decimal (1.97 se ve como 2.0). Si lo activas, la nota cuenta como la muestra el portal: un 5.95 cuenta como 6.0. Actívalo solo si la universidad aprueba con la nota redondeada.</string>
     <string name="settings_default_goal_hint">Se aplica a las materias que no tienen una meta propia.</string>
 
     <!-- Portal -->

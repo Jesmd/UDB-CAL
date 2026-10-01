@@ -12,6 +12,7 @@ sealed interface CourseAnalysis {
 
     /**
      * @property accumulated points already earned out of 10 (A).
+     * @property accumulatedOnPortal A as the portal shows it (one decimal, rounded), e.g. 1.97 -> 2.0.
      * @property pendingWeight percentage of the course still pending (P * 100).
      * @property totalWeight sum of all weights, in percent; should be 100.
      * @property maxPossible best possible final grade (F_max).
@@ -20,6 +21,7 @@ sealed interface CourseAnalysis {
      */
     data class Computed(
         val accumulated: BigDecimal,
+        val accumulatedOnPortal: BigDecimal,
         val pendingWeight: BigDecimal,
         val totalWeight: BigDecimal,
         val maxPossible: BigDecimal,
@@ -59,6 +61,8 @@ sealed interface TargetOutcome {
 data class Projection(
     val pendingAverage: BigDecimal,
     val finalGrade: BigDecimal,
+    /** The projected final grade as the portal would show it (one decimal, rounded). */
+    val finalGradeOnPortal: BigDecimal,
     val passes: Boolean,
     val reachesGoal: Boolean,
 )
