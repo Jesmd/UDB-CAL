@@ -10,7 +10,6 @@
     <string name="action_delete">Eliminar</string>
     <string name="action_back">Volver</string>
     <string name="action_edit">Editar</string>
-    <string name="loading">Cargando…</string>
     <string name="storage_read_error">No se pudieron leer los datos guardados. Tus datos no se modificaron.</string>
     <string name="storage_save_error">No se pudieron guardar los cambios.</string>
 
@@ -88,4 +87,31 @@
     <string name="settings_default_goal_label">Meta por defecto</string>
     <string name="settings_default_goal_invalid">Escribe un valor entre la nota mínima y 10, con un decimal como máximo.</string>
     <string name="settings_default_goal_hint">Se aplica a las materias que no tienen una meta propia.</string>
+
+    <!-- Portal -->
+    <string name="settings_portal_title">Portal universitario</string>
+    <string name="settings_portal_hint">El inicio de sesión se hace en la página oficial: la app nunca ve ni guarda tu contraseña.</string>
+    <string name="settings_portal_state">Estado: %1$s</string>
+    <string name="session_logged_out">sin sesión iniciada</string>
+    <string name="session_logged_in">sesión activa</string>
+    <string name="session_expired">la sesión expiró</string>
+    <string name="portal_open_login">Iniciar sesión en el portal</string>
+    <string name="portal_open">Abrir portal</string>
+    <string name="portal_logout">Cerrar sesión</string>
+    <string name="diagnostic_title">Modo diagnóstico</string>
+    <string name="diagnostic_hint">Muestra herramientas para guardar el HTML de una página del portal. Úsalo solo para preparar capturas de prueba.</string>
+    <string name="portal_title">Portal</string>
+    <string name="portal_notes">Notas</string>
+    <string name="portal_reload">Recargar</string>
+    <string name="portal_link_blocked">Enlace bloqueado: solo se permite el portal de la universidad.</string>
+    <string name="portal_load_error">No se pudo cargar la página. Revisa tu conexión.</string>
+    <string name="portal_load_error_detail">Detalle técnico: %1$s</string>
+    <string name="portal_retry">Reintentar</string>
+    <string name="portal_expired_banner">La sesión expiró. Inicia sesión de nuevo.</string>
+    <string name="portal_diag_page">Página: %1$s</string>
+    <string name="portal_save_html">Guardar HTML de esta página</string>
+    <string name="portal_save_html_login_hint">Solo disponible después de iniciar sesión.</string>
+    <string name="portal_html_saved">HTML guardado.</string>
+    <string name="portal_html_failed">No se pudo guardar el archivo.</string>
+    <string name="portal_html_read_failed">No se pudo leer la página.</string>
 </resources>

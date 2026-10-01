@@ -34,9 +34,12 @@ import com.example.minimo.ui.courses.CoursesViewModel
 import com.example.minimo.ui.detail.COURSE_ID_ARG
 import com.example.minimo.ui.detail.CourseDetailScreen
 import com.example.minimo.ui.detail.CourseDetailViewModel
+import com.example.minimo.ui.portal.PortalScreen
+import com.example.minimo.ui.portal.PortalViewModel
 import com.example.minimo.ui.settings.SettingsScreen
 import com.example.minimo.ui.settings.SettingsViewModel
 
+private const val PORTAL_ROUTE = "portal"
 private const val COURSE_DETAIL_ROUTE = "course/{$COURSE_ID_ARG}"
 
 private enum class TopLevelDestination(
@@ -98,7 +101,16 @@ fun MinimoApp(container: AppContainer) {
                 )
             }
             composable(TopLevelDestination.Settings.route) {
-                SettingsScreen(viewModel(factory = SettingsViewModel.factory(container)))
+                SettingsScreen(
+                    viewModel = viewModel(factory = SettingsViewModel.factory(container)),
+                    onOpenPortal = { navController.navigate(PORTAL_ROUTE) },
+                )
+            }
+            composable(PORTAL_ROUTE) {
+                PortalScreen(
+                    viewModel = viewModel(factory = PortalViewModel.factory(container)),
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(
                 route = COURSE_DETAIL_ROUTE,

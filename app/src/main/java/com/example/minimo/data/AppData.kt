@@ -7,4 +7,6 @@ import com.example.minimo.domain.GradeSettings
 data class AppData(
     val settings: GradeSettings = GradeSettings(),
     val courses: List<Course> = emptyList(),
+    /** Shows developer tools (such as saving a portal page as HTML). */
+    val diagnosticMode: Boolean = false,
 )
