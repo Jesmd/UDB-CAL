@@ -60,6 +60,8 @@ class CourseRepository(private val store: DataStore<Preferences>) {
 
     suspend fun saveSettings(settings: GradeSettings) = update { it.copy(settings = settings) }
 
+    suspend fun setDiagnosticMode(enabled: Boolean) = update { it.copy(diagnosticMode = enabled) }
+
     private suspend fun updateCourse(courseId: String, change: (Course) -> Course) = update { data ->
         data.copy(courses = data.courses.map { if (it.id == courseId) change(it) else it })
     }
