@@ -11,6 +11,15 @@ No es una app oficial de la universidad.
 - **Modo manual:** crear, editar y borrar materias y evaluaciones. Funciona sin portal.
 - **Sincronizar:** trae las materias, actividades, porcentajes y notas del ciclo actual desde el portal, con tu propia sesión.
 
+## Diseño
+
+Interfaz inspirada en el "Liquid Glass" de iOS, hecha solo con Compose (sin librerías extra), en `ui/glass/`:
+
+- Barra de pestañas flotante con una "lente" de vidrio que se desliza (también se puede arrastrar) y barra superior que se vuelve vidrio al hacer scroll.
+- Superficies de vidrio con borde especular, fondo ambiental animado, botones y interruptores con rebote y vibración suave, diálogos que aparecen con resorte.
+- En Android 12+ el vidrio desenfoca de verdad el contenido que pasa por debajo; en versiones anteriores usa un relleno esmerilado más opaco.
+- Transiciones de navegación estilo iOS y gesto "atrás" predictivo. Respeta "quitar animaciones" del sistema.
+
 ## Privacidad
 
 - El inicio de sesión ocurre en la página oficial dentro de un WebView. La app nunca ve ni guarda tu contraseña.

@@ -1,36 +1,34 @@
 package com.example.minimo.ui.detail
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +37,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -61,9 +62,23 @@ import com.example.minimo.ui.asNumber
 import com.example.minimo.ui.asPercent
 import com.example.minimo.ui.asThreshold
 import com.example.minimo.ui.courses.CourseEditorDialog
+import com.example.minimo.ui.glass.GlassButton
+import com.example.minimo.ui.glass.GlassButtonStyle
+import com.example.minimo.ui.glass.GlassCard
+import com.example.minimo.ui.glass.GlassDivider
+import com.example.minimo.ui.glass.GlassIconButton
+import com.example.minimo.ui.glass.GlassNotice
+import com.example.minimo.ui.glass.GlassScaffold
+import com.example.minimo.ui.glass.GlassSliderThumb
+import com.example.minimo.ui.glass.GlassSliderTrack
+import com.example.minimo.ui.glass.GlassTextField
+import com.example.minimo.ui.glass.GlassTopBar
+import com.example.minimo.ui.glass.GradeBar
+import com.example.minimo.ui.glass.NoticeKind
+import com.example.minimo.ui.glass.topBarProgress
+import com.example.minimo.ui.theme.glass
 import java.math.BigDecimal
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseDetailScreen(
     viewModel: CourseDetailViewModel,
@@ -75,45 +90,56 @@ fun CourseDetailScreen(
     // Evaluation being edited: its id, or NEW_EVALUATION for a new one, or null when no dialog is open.
     var editingEvaluationId by rememberSaveable { mutableStateOf<String?>(null) }
     var deletingEvaluationId by rememberSaveable { mutableStateOf<String?>(null) }
+    val listState = rememberLazyListState()
 
     val content = state as? CourseDetailUiState.Content
 
-    Scaffold(
+    // If the evaluation being edited disappears (e.g. a sync replaced it), close its dialogs instead of
+    // letting the form turn into a "new evaluation" form that would save a copy.
+    val editingGone = content != null && editingEvaluationId.let { id ->
+        id != null && id != NEW_EVALUATION && content.course.evaluations.none { it.id == id }
+    }
+    LaunchedEffect(editingGone) {
+        if (editingGone) {
+            editingEvaluationId = null
+            deletingEvaluationId = null
+        }
+    }
+
+    GlassScaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(content?.course?.name.orEmpty(), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                },
+            GlassTopBar(
+                title = content?.course?.name.orEmpty(),
+                progress = listState.topBarProgress(),
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back))
-                    }
+                    GlassIconButton(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back), onBack)
                 },
                 actions = {
                     // Portal courses are replaced on each sync, so they are not edited or deleted by hand.
                     if (content != null && !content.fromPortal) {
-                        IconButton(onClick = { showCourseEditor = true }) {
-                            Icon(Icons.Filled.Edit, stringResource(R.string.action_edit))
-                        }
-                        IconButton(onClick = { showCourseDelete = true }) {
-                            Icon(Icons.Filled.Delete, stringResource(R.string.action_delete))
-                        }
+                        GlassIconButton(Icons.Filled.Edit, stringResource(R.string.action_edit), { showCourseEditor = true })
+                        GlassIconButton(
+                            Icons.Filled.Delete,
+                            stringResource(R.string.action_delete),
+                            { showCourseDelete = true },
+                            tint = MaterialTheme.colorScheme.error,
+                        )
                     }
                 },
             )
         },
     ) { padding ->
-        val modifier = Modifier.padding(padding)
         when (state) {
-            CourseDetailUiState.Loading -> LoadingBox(modifier)
-            CourseDetailUiState.NotFound -> MessageBox(stringResource(R.string.detail_not_found), modifier)
-            CourseDetailUiState.Error -> MessageBox(stringResource(R.string.storage_read_error), modifier)
+            CourseDetailUiState.Loading -> LoadingBox(Modifier.padding(padding))
+            CourseDetailUiState.NotFound -> MessageBox(stringResource(R.string.detail_not_found), Modifier.padding(padding))
+            CourseDetailUiState.Error -> MessageBox(stringResource(R.string.storage_read_error), Modifier.padding(padding))
             is CourseDetailUiState.Content -> if (content != null) {
                 DetailContent(
                     content = content,
                     viewModel = viewModel,
+                    listState = listState,
+                    padding = padding,
                     onEditEvaluation = { editingEvaluationId = it },
-                    modifier = modifier,
                 )
             }
         }
@@ -143,7 +169,7 @@ fun CourseDetailScreen(
                 onDismiss = { showCourseDelete = false },
             )
         }
-        editingEvaluationId?.let { id ->
+        editingEvaluationId?.takeUnless { editingGone }?.let { id ->
             val existing = content.course.evaluations.firstOrNull { it.id == id }
             EvaluationEditorDialog(
                 initial = existing,
@@ -155,7 +181,7 @@ fun CourseDetailScreen(
                 onDismiss = { editingEvaluationId = null },
             )
         }
-        deletingEvaluationId?.let { id ->
+        deletingEvaluationId?.takeUnless { editingGone }?.let { id ->
             val name = content.course.evaluations.firstOrNull { it.id == id }?.name.orEmpty()
             ConfirmDeleteDialog(
                 title = stringResource(R.string.evaluation_delete_title),
@@ -178,16 +204,22 @@ private const val NEW_EVALUATION = "new"
 private fun DetailContent(
     content: CourseDetailUiState.Content,
     viewModel: CourseDetailViewModel,
+    listState: LazyListState,
+    padding: PaddingValues,
     onEditEvaluation: (String) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        modifier = modifier.imePadding(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        state = listState,
+        contentPadding = PaddingValues(
+            start = 16.dp,
+            end = 16.dp,
+            top = padding.calculateTopPadding(),
+            bottom = padding.calculateBottomPadding() + 8.dp,
+        ),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        item { SummaryBlock(content) }
-        item {
+        item(key = "summary") { SummaryBlock(content) }
+        item(key = "evaluations") {
             EvaluationsBlock(
                 evaluations = content.course.evaluations,
                 fromPortal = content.fromPortal,
@@ -198,23 +230,25 @@ private fun DetailContent(
             )
         }
         if (content.analysis is CourseAnalysis.Computed) {
-            item {
+            item(key = "goal") {
                 GoalBlock(
                     content = content,
                     onGoalChosen = viewModel::setGoalTenths,
                     onUseDefault = viewModel::useDefaultGoal,
                 )
             }
-            item {
-                Button(onClick = viewModel::onCalculateMinimum, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.calculate_minimum))
-                }
+            item(key = "calculate") {
+                GlassButton(
+                    text = stringResource(R.string.calculate_minimum),
+                    onClick = viewModel::onCalculateMinimum,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
             if (content.minimumShown) {
-                item { ResultsBlock(content, content.analysis) }
+                item(key = "results") { ResultsBlock(content, content.analysis, Modifier.animateItem()) }
             }
             if (content.canSimulate) {
-                item {
+                item(key = "simulator") {
                     SimulatorBlock(
                         content = content,
                         onTextChange = viewModel::onSimulatorTextChange,
@@ -227,36 +261,78 @@ private fun DetailContent(
 
 @Composable
 private fun SummaryBlock(content: CourseDetailUiState.Content) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(content.course.name, style = MaterialTheme.typography.headlineSmall)
-        val origin = when {
-            content.fromPortal -> stringResource(R.string.detail_portal_source, content.course.code.orEmpty())
-            else -> content.course.code
-        }
-        origin?.let {
-            Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(Modifier.padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                content.course.name,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.semantics { heading() },
+            )
+            val origin = when {
+                content.fromPortal -> stringResource(R.string.detail_portal_source, content.course.code.orEmpty())
+                else -> content.course.code
+            }
+            origin?.let {
+                Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
         when (val analysis = content.analysis) {
             CourseAnalysis.NoEvaluations -> Unit
             is CourseAnalysis.Computed -> {
-                Text(
-                    stringResource(
-                        R.string.detail_summary,
-                        analysis.accumulated.toPlainString(),
-                        analysis.accumulatedOnPortal.toPlainString(),
-                        analysis.pendingWeight.asPercent(),
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                )
+                GlassCard(Modifier.fillMaxWidth()) {
+                    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Stat(
+                                label = stringResource(R.string.stat_accumulated),
+                                value = analysis.accumulated.toPlainString(),
+                                suffix = stringResource(R.string.stat_out_of),
+                                modifier = Modifier.weight(1f),
+                            )
+                            Stat(
+                                label = stringResource(R.string.stat_pending),
+                                value = analysis.pendingWeight.asPercent(),
+                                modifier = Modifier.weight(1f),
+                            )
+                            Stat(
+                                label = stringResource(R.string.stat_portal),
+                                value = analysis.accumulatedOnPortal.toPlainString(),
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                        GradeBar(
+                            earned = analysis.accumulated.toFloat(),
+                            possible = analysis.maxPossible.toFloat(),
+                            passMark = content.settings.passMark.toFloat(),
+                        )
+                    }
+                }
                 if (!analysis.weightsSumTo100) {
-                    Text(
+                    GlassNotice(
                         stringResource(R.string.detail_weights_warning, analysis.totalWeight.asPercent()),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
+                        kind = NoticeKind.Warning,
+                        icon = Icons.Filled.Warning,
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Stat(label: String, value: String, modifier: Modifier = Modifier, suffix: String? = null) {
+    Column(modifier) {
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, maxLines = 1)
+            if (suffix != null) {
+                Text(
+                    suffix,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 3.dp, bottom = 3.dp),
+                )
+            }
+        }
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -269,16 +345,26 @@ private fun EvaluationsBlock(
     onEdit: (Evaluation) -> Unit,
     onRealZeroChange: (String, Boolean) -> Unit,
 ) {
-    OutlinedCard(Modifier.fillMaxWidth()) {
+    GlassCard(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(vertical = 8.dp)) {
             Row(
-                Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp).heightIn(min = 48.dp),
+                Modifier.fillMaxWidth().padding(start = 20.dp, end = 12.dp).heightIn(min = 52.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.evaluations_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
+                Text(
+                    stringResource(R.string.evaluations_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.semantics { heading() },
+                )
                 if (!fromPortal) {
-                    TextButton(onClick = onAdd) { Text(stringResource(R.string.evaluations_add)) }
+                    GlassButton(
+                        stringResource(R.string.evaluations_add),
+                        onAdd,
+                        style = GlassButtonStyle.Regular,
+                        icon = Icons.Filled.Add,
+                        compact = true,
+                    )
                 }
             }
             if (fromPortal) {
@@ -286,80 +372,96 @@ private fun EvaluationsBlock(
                     stringResource(R.string.detail_portal_read_only),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 8.dp),
                 )
             }
             if (evaluations.isEmpty()) {
                 Text(
                     stringResource(if (fromPortal) R.string.courses_portal_no_activities else R.string.evaluations_empty),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
                 )
             } else {
-                Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)) {
+                Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp)) {
                     HeaderCell(stringResource(R.string.evaluations_header_name), Modifier.weight(1f))
                     HeaderCell(stringResource(R.string.evaluations_header_weight), Modifier.padding(start = 8.dp).weight(0.28f), TextAlign.End)
                     HeaderCell(stringResource(R.string.evaluations_header_grade), Modifier.padding(start = 8.dp).weight(0.4f), TextAlign.End)
                 }
                 evaluations.forEach { evaluation ->
-                    HorizontalDivider()
-                    // Long names (the portal has some over 150 characters) show 4 lines; tapping a portal row shows
-                    // the whole name. Manual rows open the editor, which shows it whole.
-                    var expanded by rememberSaveable(evaluation.id) { mutableStateOf(false) }
-                    val expandLabel = stringResource(if (expanded) R.string.evaluation_collapse else R.string.evaluation_expand)
-                    val rowModifier = if (fromPortal) {
-                        Modifier.clickable(onClickLabel = expandLabel) { expanded = !expanded }
-                    } else {
-                        Modifier.clickable(onClickLabel = stringResource(R.string.action_edit)) { onEdit(evaluation) }
-                    }
-                    Row(
-                        rowModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Column(Modifier.weight(1f)) {
-                            Text(
-                                evaluation.name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = if (expanded) Int.MAX_VALUE else 4,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                            portalZeros[evaluation.id]?.let { isRealZero ->
-                                Text(
-                                    stringResource(R.string.evaluation_portal_zero_hint),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                                TextButton(
-                                    onClick = { onRealZeroChange(evaluation.id, !isRealZero) },
-                                    contentPadding = PaddingValues(horizontal = 0.dp),
-                                ) {
-                                    Text(
-                                        stringResource(
-                                            if (isRealZero) R.string.evaluation_back_to_pending else R.string.evaluation_real_zero,
-                                        ),
-                                    )
-                                }
-                            }
-                        }
-                        Text(
-                            evaluation.weight.asPercent(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.padding(start = 8.dp).weight(0.28f),
-                        )
-                        val grade = (evaluation.status as? EvaluationStatus.Graded)?.grade
-                        Text(
-                            text = grade?.asNumber() ?: stringResource(R.string.evaluation_pending),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = if (grade != null) FontWeight.SemiBold else FontWeight.Normal,
-                            color = if (grade != null) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.End,
-                            modifier = Modifier.padding(start = 8.dp).weight(0.4f),
-                        )
-                    }
+                    GlassDivider(Modifier.padding(horizontal = 20.dp))
+                    EvaluationRow(
+                        evaluation = evaluation,
+                        fromPortal = fromPortal,
+                        portalZero = portalZeros[evaluation.id],
+                        onEdit = { onEdit(evaluation) },
+                        onRealZeroChange = { onRealZeroChange(evaluation.id, it) },
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun EvaluationRow(
+    evaluation: Evaluation,
+    fromPortal: Boolean,
+    portalZero: Boolean?,
+    onEdit: () -> Unit,
+    onRealZeroChange: (Boolean) -> Unit,
+) {
+    // Long names (the portal has some over 150 characters) show 4 lines; tapping a portal row shows the whole
+    // name. Manual rows open the editor, which shows it whole.
+    var expanded by rememberSaveable(evaluation.id) { mutableStateOf(false) }
+    val expandLabel = stringResource(if (expanded) R.string.evaluation_collapse else R.string.evaluation_expand)
+    val editLabel = stringResource(R.string.action_edit)
+    val rowModifier = if (fromPortal) {
+        Modifier.clickable(onClickLabel = expandLabel) { expanded = !expanded }
+    } else {
+        Modifier.clickable(onClickLabel = editLabel, onClick = onEdit)
+    }
+    Row(
+        rowModifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f)) {
+            Text(
+                evaluation.name,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = if (expanded) Int.MAX_VALUE else 4,
+                overflow = TextOverflow.Ellipsis,
+            )
+            portalZero?.let { isRealZero ->
+                Text(
+                    stringResource(R.string.evaluation_portal_zero_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                GlassButton(
+                    text = stringResource(if (isRealZero) R.string.evaluation_back_to_pending else R.string.evaluation_real_zero),
+                    onClick = { onRealZeroChange(!isRealZero) },
+                    style = GlassButtonStyle.Regular,
+                    compact = true,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+            }
+        }
+        Text(
+            evaluation.weight.asPercent(),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.End,
+            modifier = Modifier.padding(start = 8.dp).weight(0.28f),
+        )
+        val grade = (evaluation.status as? EvaluationStatus.Graded)?.grade
+        Text(
+            text = grade?.asNumber() ?: stringResource(R.string.evaluation_pending),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = if (grade != null) FontWeight.SemiBold else FontWeight.Normal,
+            color = if (grade != null) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.End,
+            modifier = Modifier.padding(start = 8.dp).weight(0.4f),
+        )
     }
 }
 
@@ -374,6 +476,7 @@ private fun HeaderCell(text: String, modifier: Modifier, align: TextAlign = Text
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GoalBlock(
     content: CourseDetailUiState.Content,
@@ -385,51 +488,69 @@ private fun GoalBlock(
     // The slider follows the finger; the goal is saved when the finger lifts.
     var dragged by remember(savedTenths) { mutableFloatStateOf(savedTenths.toFloat()) }
     val shownTenths = dragged.toInt()
+    val haptic = LocalHapticFeedback.current
+    val interaction = remember { MutableInteractionSource() }
+    val goalText = stringResource(R.string.goal_value, BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold())
 
-    Column {
-        Text(stringResource(R.string.goal_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
-        Text(
-            stringResource(R.string.goal_value, BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold()),
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        if (minTenths < 100) {
-            val goalDescription = stringResource(R.string.goal_value, BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold())
-            Slider(
-                modifier = Modifier.semantics { stateDescription = goalDescription },
-                value = dragged,
-                onValueChange = { dragged = it },
-                onValueChangeFinished = { onGoalChosen(dragged.toInt()) },
-                valueRange = minTenths.toFloat()..100f,
-                steps = 100 - minTenths - 1,
-            )
-        }
-        if (content.hasOwnGoal) {
-            TextButton(onClick = onUseDefault) { Text(stringResource(R.string.goal_reset)) }
-        } else {
+    GlassCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                stringResource(R.string.goal_default_hint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                stringResource(R.string.goal_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.semantics { heading() },
             )
+            Text(goalText, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary)
+            if (minTenths < 100) {
+                Slider(
+                    modifier = Modifier.semantics { stateDescription = goalText },
+                    value = dragged,
+                    onValueChange = {
+                        if (it.toInt() != dragged.toInt()) haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                        dragged = it
+                    },
+                    onValueChangeFinished = { onGoalChosen(dragged.toInt()) },
+                    valueRange = minTenths.toFloat()..100f,
+                    steps = 100 - minTenths - 1,
+                    interactionSource = interaction,
+                    thumb = { GlassSliderThumb(interaction) },
+                    track = { GlassSliderTrack(it) },
+                )
+            }
+            if (content.hasOwnGoal) {
+                GlassButton(
+                    stringResource(R.string.goal_reset),
+                    onUseDefault,
+                    style = GlassButtonStyle.Regular,
+                    compact = true,
+                )
+            } else {
+                Text(
+                    stringResource(R.string.goal_default_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ResultsBlock(content: CourseDetailUiState.Content, analysis: CourseAnalysis.Computed) {
-    Card(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+private fun ResultsBlock(content: CourseDetailUiState.Content, analysis: CourseAnalysis.Computed, modifier: Modifier = Modifier) {
+    GlassCard(modifier.fillMaxWidth()) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             TargetLine(
                 label = stringResource(R.string.target_pass_label, content.settings.passMark.asThreshold()),
                 outcome = analysis.toPass,
             )
             // When the goal equals the pass mark the second line would just repeat the first.
             if (content.goal.compareTo(content.settings.passMark) != 0) {
+                GlassDivider()
                 TargetLine(
                     label = stringResource(R.string.target_goal_label, content.goal.asThreshold()),
                     outcome = analysis.toGoal,
                 )
             }
+            GlassDivider()
             Text(
                 stringResource(R.string.max_possible, analysis.maxPossible.toPlainString()),
                 style = MaterialTheme.typography.titleSmall,
@@ -450,11 +571,24 @@ private fun TargetLine(label: String, outcome: TargetOutcome) {
         )
     }
     val isBad = outcome is TargetOutcome.Impossible || (outcome is TargetOutcome.NoPending && !outcome.reached)
-    Text(
-        text = stringResource(R.string.target_line, label, description),
-        style = MaterialTheme.typography.bodyLarge,
-        color = if (isBad) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
-    )
+    val isGood = outcome is TargetOutcome.Secured || (outcome is TargetOutcome.NoPending && outcome.reached)
+    val color = when {
+        isBad -> MaterialTheme.colorScheme.error
+        isGood -> MaterialTheme.glass.success
+        else -> MaterialTheme.colorScheme.primary
+    }
+    val icon = when {
+        isBad -> Icons.Filled.Warning
+        isGood -> Icons.Filled.CheckCircle
+        else -> Icons.Filled.Info
+    }
+    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.padding(top = 2.dp).size(24.dp))
+        Column {
+            Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(description, style = MaterialTheme.typography.titleSmall, color = color)
+        }
+    }
 }
 
 @Composable
@@ -462,20 +596,20 @@ private fun SimulatorBlock(
     content: CourseDetailUiState.Content,
     onTextChange: (String) -> Unit,
 ) {
-    OutlinedCard(Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.simulator_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
+    GlassCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                stringResource(R.string.simulator_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.semantics { heading() },
+            )
             val invalid = content.simulation == SimulationState.Invalid
-            OutlinedTextField(
+            GlassTextField(
                 value = content.simulatorText,
                 onValueChange = onTextChange,
-                label = { Text(stringResource(R.string.simulator_label)) },
+                label = stringResource(R.string.simulator_label),
                 isError = invalid,
-                supportingText = if (invalid) {
-                    { Text(stringResource(R.string.simulator_invalid)) }
-                } else {
-                    null
-                },
+                supportingText = if (invalid) stringResource(R.string.simulator_invalid) else null,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 modifier = Modifier.fillMaxWidth(),
@@ -492,24 +626,37 @@ private fun SimulatorBlock(
                     ),
                     style = MaterialTheme.typography.titleSmall,
                 )
-                Text(
-                    stringResource(
+                VerdictLine(
+                    text = stringResource(
                         if (projection.passes) R.string.simulator_passes else R.string.simulator_fails,
                         passMark,
                     ),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = if (projection.passes) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.error,
+                    good = projection.passes,
                 )
                 if (content.goal.compareTo(content.settings.passMark) != 0) {
-                    Text(
-                        stringResource(
+                    VerdictLine(
+                        text = stringResource(
                             if (projection.reachesGoal) R.string.simulator_goal_reached else R.string.simulator_goal_not_reached,
                             content.goal.asThreshold(),
                         ),
-                        style = MaterialTheme.typography.bodyLarge,
+                        good = projection.reachesGoal,
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun VerdictLine(text: String, good: Boolean) {
+    val color: Color = if (good) MaterialTheme.glass.success else MaterialTheme.colorScheme.error
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Icon(
+            if (good) Icons.Filled.CheckCircle else Icons.Filled.Warning,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(22.dp),
+        )
+        Text(text, style = MaterialTheme.typography.bodyLarge, color = color)
     }
 }
