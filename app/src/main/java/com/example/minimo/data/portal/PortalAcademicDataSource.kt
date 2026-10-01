@@ -27,7 +27,14 @@ class PortalAcademicDataSource(
         val modules = page.modules.filterNot { it.withdrawn }
         val courses = modules.mapIndexed { index, module ->
             onProgress(index, modules.size)
-            PortalCourseData(module, readDetail(module).activities)
+            val detail = try {
+                readDetail(module)
+            } catch (e: PortalException.DetailFailed) {
+                throw ifSessionExpired(e)
+            } catch (e: PortalException.Timeout) {
+                throw ifSessionExpired(e)
+            }
+            PortalCourseData(module, detail.activities)
         }
         onProgress(modules.size, modules.size)
         return PortalSnapshot(page.cycle, courses)
@@ -41,6 +48,19 @@ class PortalAcademicDataSource(
         val detail = GradesParser.parseDetail(html) ?: throw PortalException.DetailFailed(module.code)
         if (!normalize(detail.moduleName).equals(normalize(module.name), ignoreCase = true)) throw PortalException.DetailFailed(module.code)
         return detail
+    }
+
+    /**
+     * A detail that fails or never arrives is often an expired session. Reloading Notas tells: the portal then
+     * redirects to the login page. Costs one extra request, and only after a failure.
+     */
+    private suspend fun ifSessionExpired(original: PortalException): PortalException {
+        val url = try {
+            browser.load(PortalUrls.NOTAS_URL)
+        } catch (_: PortalException) {
+            return original
+        }
+        return if (PortalUrls.isPortalPage(url)) original else PortalException.NotLoggedIn()
     }
 
     /** Polls [read] until it returns a value, or fails with [PortalException.Timeout]. */

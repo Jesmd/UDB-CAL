@@ -40,6 +40,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +61,7 @@ import com.example.minimo.ui.asNumber
 import com.example.minimo.ui.asPercent
 import com.example.minimo.ui.asThreshold
 import com.example.minimo.ui.courses.CourseEditorDialog
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -271,7 +275,7 @@ private fun EvaluationsBlock(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.evaluations_title), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.evaluations_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
                 if (!fromPortal) {
                     TextButton(onClick = onAdd) { Text(stringResource(R.string.evaluations_add)) }
                 }
@@ -298,7 +302,15 @@ private fun EvaluationsBlock(
                 }
                 evaluations.forEach { evaluation ->
                     HorizontalDivider()
-                    val rowModifier = if (fromPortal) Modifier else Modifier.clickable { onEdit(evaluation) }
+                    // Long names (the portal has some over 150 characters) show 4 lines; tapping a portal row shows
+                    // the whole name. Manual rows open the editor, which shows it whole.
+                    var expanded by rememberSaveable(evaluation.id) { mutableStateOf(false) }
+                    val expandLabel = stringResource(if (expanded) R.string.evaluation_collapse else R.string.evaluation_expand)
+                    val rowModifier = if (fromPortal) {
+                        Modifier.clickable(onClickLabel = expandLabel) { expanded = !expanded }
+                    } else {
+                        Modifier.clickable(onClickLabel = stringResource(R.string.action_edit)) { onEdit(evaluation) }
+                    }
                     Row(
                         rowModifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -307,7 +319,7 @@ private fun EvaluationsBlock(
                             Text(
                                 evaluation.name,
                                 style = MaterialTheme.typography.bodyMedium,
-                                maxLines = 4,
+                                maxLines = if (expanded) Int.MAX_VALUE else 4,
                                 overflow = TextOverflow.Ellipsis,
                             )
                             portalZeros[evaluation.id]?.let { isRealZero ->
@@ -374,13 +386,15 @@ private fun GoalBlock(
     val shownTenths = dragged.toInt()
 
     Column {
-        Text(stringResource(R.string.goal_title), style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.goal_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
         Text(
-            stringResource(R.string.goal_value, java.math.BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold()),
+            stringResource(R.string.goal_value, BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold()),
             style = MaterialTheme.typography.bodyLarge,
         )
         if (minTenths < 100) {
+            val goalDescription = stringResource(R.string.goal_value, BigDecimal.valueOf(shownTenths.toLong(), 1).asThreshold())
             Slider(
+                modifier = Modifier.semantics { stateDescription = goalDescription },
                 value = dragged,
                 onValueChange = { dragged = it },
                 onValueChangeFinished = { onGoalChosen(dragged.toInt()) },
@@ -449,7 +463,7 @@ private fun SimulatorBlock(
 ) {
     OutlinedCard(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.simulator_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.simulator_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.semantics { heading() })
             val invalid = content.simulation == SimulationState.Invalid
             OutlinedTextField(
                 value = content.simulatorText,
