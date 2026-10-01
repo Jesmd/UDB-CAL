@@ -12,6 +12,7 @@ import com.example.minimo.domain.Course
 import com.example.minimo.domain.CourseAnalysis
 import com.example.minimo.domain.CourseSource
 import com.example.minimo.domain.GradeCalculator
+import java.math.BigDecimal
 import java.util.UUID
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ data class CourseSummary(
     val code: String?,
     val fromPortal: Boolean,
     val analysis: CourseAnalysis,
+    val passMark: BigDecimal,
 )
 
 sealed interface CoursesUiState {
@@ -67,6 +69,7 @@ class CoursesViewModel(private val repository: CourseRepository) : ViewModel() {
                     name = course.name,
                     code = course.code,
                     fromPortal = course.source == CourseSource.PORTAL,
+                    passMark = settings.passMark,
                     analysis = GradeCalculator.analyze(
                         evaluations = course.evaluations,
                         passMark = settings.passMark,

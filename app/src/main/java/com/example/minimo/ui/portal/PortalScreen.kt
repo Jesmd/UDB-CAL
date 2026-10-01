@@ -8,24 +8,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +43,17 @@ import com.example.minimo.R
 import com.example.minimo.data.portal.HtmlSnapshot
 import com.example.minimo.data.portal.PortalUrls
 import com.example.minimo.data.portal.SessionState
+import com.example.minimo.ui.glass.GlassButton
+import com.example.minimo.ui.glass.GlassButtonStyle
+import com.example.minimo.ui.glass.GlassCard
+import com.example.minimo.ui.glass.GlassCover
+import com.example.minimo.ui.glass.GlassIconButton
+import com.example.minimo.ui.glass.GlassNotice
+import com.example.minimo.ui.glass.GlassProgressBar
+import com.example.minimo.ui.glass.GlassScaffold
+import com.example.minimo.ui.glass.GlassSnackbarHost
+import com.example.minimo.ui.glass.GlassTopBar
+import com.example.minimo.ui.glass.NoticeKind
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -56,7 +62,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONTokener
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -150,87 +155,112 @@ fun PortalScreen(viewModel: PortalViewModel, onBack: () -> Unit) {
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbar) },
+    GlassScaffold(
+        captureBackdrop = false,
+        snackbarHost = { GlassSnackbarHost(snackbar) },
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.portal_title)) },
+            GlassTopBar(
+                title = stringResource(R.string.portal_title),
+                progress = { 1f },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back))
-                    }
+                    GlassIconButton(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back), onBack)
                 },
                 actions = {
-                    TextButton(onClick = { webView.loadUrl(PortalUrls.NOTAS_URL) }) {
-                        Text(stringResource(R.string.portal_notes))
-                    }
-                    IconButton(onClick = { webView.reload() }) {
-                        Icon(Icons.Filled.Refresh, stringResource(R.string.portal_reload))
-                    }
+                    GlassButton(
+                        text = stringResource(R.string.portal_notes),
+                        onClick = { webView.loadUrl(PortalUrls.NOTAS_URL) },
+                        style = GlassButtonStyle.Regular,
+                        compact = true,
+                    )
+                    GlassIconButton(Icons.Filled.Refresh, stringResource(R.string.portal_reload), { webView.reload() })
                 },
             )
         },
     ) { padding ->
-        Column(Modifier.padding(padding).fillMaxSize().imePadding()) {
+        Column(Modifier.padding(top = padding.calculateTopPadding()).fillMaxSize().navigationBarsPadding()) {
             if (state.session == SessionState.Expired) {
-                Surface(color = MaterialTheme.colorScheme.errorContainer, modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        stringResource(R.string.portal_expired_banner),
-                        color = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    )
-                }
+                GlassNotice(
+                    stringResource(R.string.portal_expired_banner),
+                    kind = NoticeKind.Error,
+                    icon = Icons.Filled.Warning,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                )
             }
             if (state.diagnosticMode) {
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(
-                        stringResource(R.string.portal_diag_page, PortalUrls.describe(currentUrl).orEmpty()),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    val canSave = PortalUrls.isPortalPage(currentUrl)
-                    Button(onClick = ::savePageHtml, enabled = canSave, modifier = Modifier.padding(top = 4.dp)) {
-                        Text(stringResource(R.string.portal_save_html))
-                    }
-                    if (!canSave) {
+                GlassCard(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp)) {
+                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            stringResource(R.string.portal_save_html_login_hint),
+                            stringResource(R.string.portal_diag_page, PortalUrls.describe(currentUrl).orEmpty()),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                        val canSave = PortalUrls.isPortalPage(currentUrl)
+                        GlassButton(
+                            text = stringResource(R.string.portal_save_html),
+                            onClick = ::savePageHtml,
+                            enabled = canSave,
+                            compact = true,
+                        )
+                        if (!canSave) {
+                            Text(
+                                stringResource(R.string.portal_save_html_login_hint),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
             }
             if (progress in 1..99) {
-                LinearProgressIndicator(progress = { progress / 100f }, modifier = Modifier.fillMaxWidth())
+                GlassProgressBar(progress / 100f)
             }
-            Box(Modifier.weight(1f).fillMaxWidth()) {
+            Box(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 8.dp)
+                    .clip(RoundedCornerShape(24.dp)),
+            ) {
                 AndroidView(factory = { webView }, modifier = Modifier.fillMaxSize())
                 loadError?.let { detail ->
-                    Surface(Modifier.fillMaxSize()) {
+                    GlassCover {
                         Column(
                             modifier = Modifier.fillMaxSize().padding(24.dp),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text(
-                                stringResource(R.string.portal_load_error),
-                                style = MaterialTheme.typography.titleMedium,
-                                textAlign = TextAlign.Center,
-                            )
-                            Text(
-                                stringResource(R.string.portal_load_error_detail, detail),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(top = 8.dp),
-                            )
-                            Button(
-                                onClick = {
-                                    loadError = null
-                                    webView.loadUrl(PortalUrls.LOGIN_URL)
-                                },
-                                modifier = Modifier.padding(top = 16.dp),
-                            ) { Text(stringResource(R.string.portal_retry)) }
+                            GlassCard(Modifier.fillMaxWidth()) {
+                                Column(
+                                    Modifier.padding(24.dp).fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Warning,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(36.dp),
+                                    )
+                                    Text(
+                                        stringResource(R.string.portal_load_error),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        textAlign = TextAlign.Center,
+                                    )
+                                    Text(
+                                        stringResource(R.string.portal_load_error_detail, detail),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        textAlign = TextAlign.Center,
+                                    )
+                                    GlassButton(
+                                        text = stringResource(R.string.portal_retry),
+                                        onClick = {
+                                            loadError = null
+                                            webView.loadUrl(PortalUrls.LOGIN_URL)
+                                        },
+                                        modifier = Modifier.padding(top = 6.dp),
+                                    )
+                                }
+                            }
                         }
                     }
                 }
