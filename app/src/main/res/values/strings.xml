@@ -117,7 +117,7 @@
     <!-- Sync -->
     <string name="sync_action">Sincronizar</string>
     <string name="sync_title">Sincronizar con el portal</string>
-    <string name="sync_needs_login">Inicia sesión en el portal para sincronizar. La app nunca ve tu contraseña; la sincronización sigue sola al entrar.</string>
+    <string name="sync_needs_login">Inicia sesión en el portal para sincronizar (si tu sesión expiró, vuelve a entrar). La app nunca ve tu contraseña; la sincronización sigue sola al entrar.</string>
     <string name="sync_opening">Abriendo tus notas en el portal…</string>
     <string name="sync_reading_courses">Leyendo tus materias…</string>
     <string name="sync_reading_progress">Leyendo materia %1$d de %2$d…</string>
@@ -146,7 +146,21 @@
     <!-- Portal courses in detail -->
     <string name="detail_portal_source">Del portal · %1$s</string>
     <string name="detail_portal_read_only">Las actividades vienen del portal y se actualizan al sincronizar.</string>
+    <string name="evaluation_expand">Ver nombre completo</string>
+    <string name="evaluation_collapse">Ver nombre corto</string>
     <string name="evaluation_real_zero">Es un 0 real</string>
     <string name="evaluation_back_to_pending">Marcar como pendiente</string>
     <string name="evaluation_portal_zero_hint">El portal muestra 0.00</string>
+
+    <!-- Parser check (diagnostic mode) -->
+    <string name="action_close">Cerrar</string>
+    <string name="parser_check_action">Probar el lector con un HTML guardado</string>
+    <string name="parser_check_hint">Abre una página de Notas guardada y muestra lo que la app entiende de ella. No cambia tus datos.</string>
+    <string name="parser_check_title">Resultado del lector</string>
+    <string name="parser_check_unreadable">No se pudo leer el archivo (o pesa más de 10 MB).</string>
+    <string name="parser_check_changed">El lector no reconoce esta página. Si es una captura real de Notas, el portal cambió y hay que actualizar el lector.\n\nDetalle técnico: %1$s</string>
+    <string name="parser_check_cycle">Ciclo: %1$s</string>
+    <string name="parser_check_modules">Materias activas: %1$d · retiradas: %2$d</string>
+    <string name="parser_check_detail">Detalle abierto: %1$s · actividades: %2$d · porcentajes: %3$s</string>
+    <string name="parser_check_no_detail">Sin detalle abierto</string>
 </resources>
