@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.draw.clip
@@ -29,6 +28,8 @@ import com.example.minimo.ui.glass.GlassScaffold
 import com.example.minimo.ui.glass.GlassSnackbarHost
 import com.example.minimo.ui.glass.GlassTopBar
 import com.example.minimo.ui.glass.rememberEntrance
+import com.example.minimo.ui.mascot.Mimo
+import com.example.minimo.ui.mascot.MimoMood
 import com.example.minimo.ui.theme.glass
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -164,17 +165,21 @@ private fun SyncPanel(state: SyncUiState, onRetry: () -> Unit, onBack: () -> Uni
                 ) {
                     when (state) {
                         SyncUiState.Opening, SyncUiState.NeedsLogin -> {
-                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                            Mimo(mood = MimoMood.Focused, size = 120.dp, animated = true)
+                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp), strokeWidth = 3.dp)
                             PanelText(stringResource(R.string.sync_opening))
                         }
                         is SyncUiState.Reading -> {
+                            Mimo(mood = MimoMood.Focused, size = 120.dp, animated = true)
                             if (state.total == 0) {
-                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp), strokeWidth = 3.dp)
                             } else {
                                 // Determinate: how many courses were read so far.
                                 CircularProgressIndicator(
                                     progress = { (state.done / state.total.toFloat()).coerceIn(0f, 1f) },
                                     color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(28.dp),
+                                    strokeWidth = 3.dp,
                                 )
                             }
                             PanelText(
@@ -186,7 +191,7 @@ private fun SyncPanel(state: SyncUiState, onRetry: () -> Unit, onBack: () -> Uni
                             )
                         }
                         is SyncUiState.Done -> {
-                            ResultBadge(Icons.Filled.CheckCircle, MaterialTheme.glass.success)
+                            Mimo(mood = MimoMood.Happy, size = 130.dp, animated = true)
                             PanelText(
                                 if (state.cycle != null) {
                                     pluralStringResource(R.plurals.sync_done_cycle, state.courseCount, state.courseCount, state.cycle)

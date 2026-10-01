@@ -1,8 +1,6 @@
 package com.example.minimo.ui.courses
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,10 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
@@ -52,7 +48,8 @@ import com.example.minimo.ui.glass.GlassTopBar
 import com.example.minimo.ui.glass.GradeBar
 import com.example.minimo.ui.glass.LargeTitle
 import com.example.minimo.ui.glass.LocalGlassBackdrop
-import com.example.minimo.ui.glass.glassSurface
+import com.example.minimo.ui.mascot.Mimo
+import com.example.minimo.ui.mascot.MimoMood
 import com.example.minimo.ui.glass.topBarProgress
 import java.text.DateFormat
 import java.util.Date
@@ -156,25 +153,12 @@ private fun EmptyState(lastSync: SyncInfo?, padding: PaddingValues, onSync: () -
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Box(
-                Modifier
-                    .size(96.dp)
-                    .glassSurface(CircleShape, backdrop = null, shadowElevation = 14.dp)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.10f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.List,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(42.dp),
-                )
-            }
+            Mimo(mood = MimoMood.Normal, size = 150.dp, animated = true)
             Text(
                 stringResource(R.string.courses_empty_title),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 22.dp),
+                modifier = Modifier.padding(top = 16.dp),
             )
             Text(
                 stringResource(R.string.courses_empty_hint),
