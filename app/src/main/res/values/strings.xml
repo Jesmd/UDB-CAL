@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mínimo</string>
+    <string name="nav_courses">Materias</string>
+    <string name="nav_settings">Ajustes</string>
+    <string name="courses_empty_title">Aún no hay materias</string>
+    <string name="settings_empty">Sin opciones por ahora.</string>
+</resources>
